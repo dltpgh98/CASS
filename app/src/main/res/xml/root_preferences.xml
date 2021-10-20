@@ -1,0 +1,37 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Setting">
+        <EditTextPreference
+            android:enabled="false"
+            app:key="setting_code"
+            app:title="CODE : 1Q2W3E4R"
+            app:useSimpleSummaryProvider="false" />
+        <EditTextPreference
+            app:key="setting_pw"
+            app:title="패스워드 설정"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="setting_nickname"
+            app:title="닉네임 설정"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:isPreferenceVisible="false"
+            app:defaultValue="reply"
+            app:entries="@array/reply_entries"
+            app:entryValues="@array/reply_values"
+            app:key="setting_Intercept"
+            app:title="방장권한 넘기기" />
+        <ListPreference
+            app:isPreferenceVisible="false"
+            app:defaultValue="reply"
+            app:entries="@array/reply_entries"
+            app:entryValues="@array/reply_values"
+            app:key="setting_banuser"
+            app:title="멤버 추방하기" />
+        <EditTextPreference
+            app:key="setting_donation"
+            app:title="제작자 후원하기"
+            app:useSimpleSummaryProvider="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
