@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CASS.iml" filepath="$PROJECT_DIR$/.idea/modules/CASS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fusion_project_cass.iml" filepath="$PROJECT_DIR$/.idea/fusion_project_cass.iml" />
     </modules>
   </component>
 </project>

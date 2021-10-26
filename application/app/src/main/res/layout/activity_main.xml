@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingRight="20dp"
+    android:paddingStart="20dp"
+    android:orientation="vertical">
+
+<!--    <TextView-->
+<!--        android:id="@+id/logintv"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text=""-->
+<!--        android:textColor="@android:color/holo_blue_dark"-->
+<!--        android:textSize="50dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+    <ImageView
+        android:id="@+id/main_img"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:src="@drawable/cass3"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/login_id"
+        android:fontFamily="@font/fontstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="USER_ID"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_img"
+        app:layout_constraintVertical_bias="0.35">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_user_id"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/login_pw"
+        android:fontFamily="@font/fontstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:hint="PASS_WORD"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_id"
+        app:layout_constraintVertical_bias="0.35">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_user_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/login_err_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="다시 입력해 주세요"
+        android:gravity="center"
+        android:textColor="@color/red_f"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_pw"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/solid_button"
+        android:onClick="onClick"
+        android:text="로그인"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/login_err_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="9"
+        app:layout_constraintTop_toBottomOf="@id/login_btn">
+
+        <TextView
+            android:id="@+id/sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="회원가입" />
+
+        <TextView
+            android:id="@+id/find_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="ID찾기" />
+
+        <TextView
+            android:id="@+id/find_pw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="PW찾기"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
