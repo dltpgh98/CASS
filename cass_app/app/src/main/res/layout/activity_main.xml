@@ -66,6 +66,7 @@
             android:id="@+id/login_user_pwd"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:inputType="textPassword"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"/>
     </com.google.android.material.textfield.TextInputLayout>

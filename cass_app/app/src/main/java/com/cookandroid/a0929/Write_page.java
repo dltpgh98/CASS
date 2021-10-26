@@ -165,17 +165,18 @@ public class Write_page extends AppCompatActivity  implements View.OnClickListen
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
             fab3.startAnimation(fab_open);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            fab3.setClickable(true);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            fab3.setClickable(false);
             isFabOpen = false;
         } else {
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
             fab3.startAnimation(fab_close);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
-            fab3.setClickable(false);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            fab3.setClickable(true);
+
             isFabOpen = true;
         }
     }

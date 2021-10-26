@@ -18,5 +18,9 @@
             android:id="@+id/ttt3"
             android:icon="@null"
             android:title="abc12345" />
+        <item
+            android:id="@+id/ttt4"
+            android:icon="@null"
+            android:title="설정창 이동" />
     </group>
 </menu>

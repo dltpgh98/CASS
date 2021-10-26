@@ -52,13 +52,18 @@ public class left_MainActivity extends AppCompatActivity {
 
         /*우측 햄버거*/
         NavigationView navigationView2 = findViewById(R.id.nav_view2);
-        mAppBarConfiguration2 = new AppBarConfiguration.Builder(
-                R.id.ttt1, R.id.ttt2, R.id.ttt3)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController2 = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration2);
-        NavigationUI.setupWithNavController(navigationView2, navController2);
+        navigationView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.ttt4:
+                        Intent intent = new Intent(left_MainActivity.this,SettingsActivity.class);
+                        startActivity(intent);
+                        return true;
+                }
+                return false;
+            }
+        });
 
         Button lp_btn = (Button) findViewById(R.id.cld_plus_btn);
         lp_btn.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +88,7 @@ public class left_MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 drawer.openDrawer(Gravity.LEFT);
+                drawer.closeDrawer(Gravity.LEFT);
             }
         });
     }
@@ -119,6 +125,7 @@ public class left_MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(left_MainActivity.this, SettingsActivity.class);
+
                 startActivity(intent);
                 break;
         }
