@@ -17,14 +17,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".sign_up"></activity>
-        <activity android:name=".find_pwd"></activity>
-        <activity android:name=".find_id"></activity>
-        <activity android:name=".left_MainActivity"
+        <activity android:name=".Log_sign_up"></activity>
+        <activity android:name=".Log_pw"></activity>
+        <activity android:name=".Log_id"></activity>
+        <activity android:name=".Menu_MainActivity"
             android:theme="@style/Theme.0929.NoActionBar"
             ></activity>
-        <activity android:name=".Write_page"/>
-        <activity android:name=".List_page"/>
+        <activity android:name=".Schedule_pen"/>
+        <activity android:name=".Schedule_list"/>
     </application>
 
 </manifest>
