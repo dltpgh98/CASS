@@ -9,6 +9,11 @@ import android.view.Menu;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.applikeysolutions.cosmocalendar.model.Day;
+import com.applikeysolutions.cosmocalendar.view.CalendarView;
+import com.cookandroid.a0929.List.ListViewAdapter;
+import com.cookandroid.a0929.List.Schedule_ListMainActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -20,12 +25,24 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+
 public class Menu_MainActivity extends AppCompatActivity {
+    //schedule_main_fr
 
     private AppBarConfiguration mAppBarConfiguration;
     private AppBarConfiguration mAppBarConfiguration2;
     private long backKeyPressedTime = 0;
     public Toast toast;
+    public CalendarView calendarView;
+
+    List<Calendar> selectedDay;
+
+    private int y_m_d[]=new int[3];//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +50,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         setContentView(R.layout.menu_main);
         Toolbar toolbar = findViewById(R.id.menu_leftappbar_main_toolbar);
         setSupportActionBar(toolbar);
+        calendarView = (CalendarView)findViewById(R.id.schedule_main_fr_calendar_clv);
 
 
         /*좌측 햄버거 */
@@ -61,15 +79,24 @@ public class Menu_MainActivity extends AppCompatActivity {
             }
         });
 
-        Button lp_btn = (Button) findViewById(R.id.schedule_main_fr_list_btn);
-        lp_btn.setOnClickListener(new View.OnClickListener() {
+        //플로팅버튼으로 엑티비티 연결코드
+        FloatingActionButton schedule_list_floatbtn = (FloatingActionButton) findViewById(R.id.schedule_main_fr_list_fbtn);
+        schedule_list_floatbtn.setOnClickListener(new View.OnClickListener() {
             /*----------엑티비티연결--------------*/
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Menu_MainActivity.this,Schedule_list.class);
+
+                InitializeDay();//날짜 초기화
+
+                int s = 1;
+                Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
+                intent.putExtra("main_select_Day",y_m_d);
+                intent.putExtra("text",s);
+
                 startActivity(intent);
             }
         });
+        //코드 끝
         Button mp_btn_right = (Button) findViewById(R.id.schedule_main_fr_group_btn);
         mp_btn_right.setOnClickListener(new View.OnClickListener() {
             /*----------엑티비티연결--------------*/
@@ -86,6 +113,12 @@ public class Menu_MainActivity extends AppCompatActivity {
                 drawer.openDrawer(Gravity.LEFT);
             }
         });
+        /*캘린더 주말 색상*/
+
+        calendarView.setWeekendDays(new HashSet(){{
+            add(Calendar.SATURDAY);
+            add(Calendar.SUNDAY);
+        }});
     }
     /*버튼 2번눌렀을시 종료 코드 */
     @Override
@@ -120,6 +153,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(Menu_MainActivity.this, SettingsActivity.class);
+
                 startActivity(intent);
                 break;
         }
@@ -148,4 +182,37 @@ public class Menu_MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    public void InitializeDay(){
+
+        selectedDay=calendarView.getSelectedDates();
+
+        if(selectedDay.toString()=="[]"){       //선택 하지 않았을때 상태가[]이기 때문에 맞다면 현재 시간을 받아 초기화 시켜줌
+            final Calendar calendar = Calendar.getInstance();
+            final int day = calendar.get(Calendar.DAY_OF_MONTH);
+            final int month = calendar.get(Calendar.MONTH);
+            final int year = calendar.get(Calendar.YEAR);
+            y_m_d[0]=year; y_m_d[1]=month;  y_m_d[2]=day;
+        }else {                                 //선택한 날로 초기화
+            Calendar calendar = selectedDay.get(0);
+            final int day = calendar.get(Calendar.DAY_OF_MONTH);
+            final int month = calendar.get(Calendar.MONTH);
+            final int year = calendar.get(Calendar.YEAR);
+            y_m_d[0] = year; y_m_d[1] = month; y_m_d[2] = day;
+        }
+
+    }
+
+    public void InitializeCalendar(){
+        //그룹 코드,password,
+    }
+
+
+
+    /*날짜 분할*/
+
+//                String week = new SimpleDateFormat("EE").format(calendar.getTime());
+//                String day_full = year + "."+ (month+1)  + "." + day + "." + week + "요일";
+//                dayResult += (day_full + "\n");
+    /*종료*/
 }

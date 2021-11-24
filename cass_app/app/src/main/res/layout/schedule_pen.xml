@@ -85,6 +85,26 @@
         app:fabSize="mini"
         android:visibility="invisible"
         />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/schedule_pen_color4_fbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="240dp"
+        app:backgroundTint="#ff75c52a"
+        app:fabSize="mini"
+        android:visibility="invisible"
+        />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/schedule_pen_color5_fbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="285dp"
+        app:backgroundTint="#ffe9a5a7"
+        app:fabSize="mini"
+        android:visibility="invisible"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -157,8 +177,8 @@
                     android:layout_height="match_parent"
                     android:fontFamily="@font/fontstyle"
                     android:gravity="center"
-                    android:text="**월**일"
                     android:onClick="OnStartDate"
+                    android:text="**월**일"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -169,8 +189,8 @@
                     android:layout_marginLeft="20sp"
                     android:fontFamily="@font/fontstyle"
                     android:gravity="center"
-                    android:text="**:**"
                     android:onClick="OnStartTime"
+                    android:text="**:**"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -202,8 +222,8 @@
                     android:layout_height="match_parent"
                     android:fontFamily="@font/fontstyle"
                     android:gravity="center"
-                    android:text="**월**일"
                     android:onClick="OnEndDate"
+                    android:text="**월**일"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -214,8 +234,8 @@
                     android:layout_marginLeft="20sp"
                     android:fontFamily="@font/fontstyle"
                     android:gravity="center"
-                    android:text="**:**"
                     android:onClick="OnEndTime"
+                    android:text="**:**"
                     android:textSize="25sp"
                     android:textStyle="bold" />
             </TableRow>

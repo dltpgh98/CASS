@@ -4,18 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/menu_leftdrawer_main_item"
-            android:icon="@null"
-            android:title="개인스케쥴" />
-        <item
-            android:id="@+id/menu_leftdrawer_second_item"
-            android:icon="@null"
-            android:title="부천대학교 팀CASS" />
-        <item
-            android:id="@+id/menu_leftdrawer_third_item"
-            android:title="버튼 들어갈 자리"
-            app:showAsAction="ifRoom"
-            />
+        <item>
+
+        </item>
     </group>
+<!--    <group android:checkableBehavior="single">-->
+<!--        <item-->
+<!--            android:id="@+id/menu_leftdrawer_main_item"-->
+<!--            android:icon="@null"-->
+<!--            android:title="개인스케쥴" />-->
+<!--        <item-->
+<!--            android:id="@+id/menu_leftdrawer_second_item"-->
+<!--            android:icon="@null"-->
+<!--            android:title="부천대학교 팀CASS" />-->
+<!--        <item-->
+<!--            android:id="@+id/menu_leftdrawer_third_item"-->
+<!--            android:title="버튼 들어갈 자리"-->
+<!--            app:showAsAction="ifRoom"-->
+<!--            />-->
+<!--    </group>-->
 </menu>

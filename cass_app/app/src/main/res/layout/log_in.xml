@@ -7,16 +7,16 @@
     android:paddingStart="20dp"
     android:orientation="vertical">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/logintv"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginBottom="16dp"-->
-    <!--        android:gravity="center"-->
-    <!--        android:text=""-->
-    <!--        android:textColor="@android:color/holo_blue_dark"-->
-    <!--        android:textSize="50dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
+<!--        <TextView-->
+<!--            android:id="@+id/logintv"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:text=""-->
+<!--            android:textColor="@android:color/holo_blue_dark"-->
+<!--            android:textSize="50dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
     <ImageView
         android:id="@+id/log_in_main_img"
@@ -44,6 +44,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/log_in_id_et"
             android:layout_width="match_parent"
+            android:fontFamily="@font/fontstyle"
+            android:textStyle="bold"
             android:layout_height="45dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"/>
@@ -66,15 +68,18 @@
             android:id="@+id/log_in_pw_et"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:fontFamily="@font/fontstyle"
+            android:textStyle="bold"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/login_err_tv"
+        android:id="@+id/log_in_err_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="다시 입력해 주세요"
+        android:visibility="invisible"
         android:fontFamily="@font/fontstyle"
         android:gravity="center"
         android:textColor="@color/red_f"
@@ -98,7 +103,7 @@
         android:textSize="27sp"
         android:textStyle="bold"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/login_err_tv"/>
+        app:layout_constraintTop_toBottomOf="@id/log_in_err_tv"/>
 
     <LinearLayout
         android:layout_width="match_parent"
