@@ -1,0 +1,15 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>세호</item>
+        <item>동훈</item>
+        <item>성대</item>
+        <item>시훈</item>
+    </string-array>
+    <string-array name="reply_values">
+        <item>세호</item>
+        <item>동훈</item>
+        <item>성대</item>
+        <item>시훈</item>
+    </string-array>
+</resources>
