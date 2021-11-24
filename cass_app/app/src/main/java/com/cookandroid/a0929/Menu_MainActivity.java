@@ -41,6 +41,8 @@ public class Menu_MainActivity extends AppCompatActivity {
     public CalendarView calendarView;
 
     List<Calendar> selectedDay;
+    List<String> group_name;
+    List<String> group_code;
 
     private int y_m_d[]=new int[3];//
 
@@ -48,6 +50,7 @@ public class Menu_MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_main);
+
         Toolbar toolbar = findViewById(R.id.menu_leftappbar_main_toolbar);
         setSupportActionBar(toolbar);
         calendarView = (CalendarView)findViewById(R.id.schedule_main_fr_calendar_clv);
@@ -56,6 +59,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         /*좌측 햄버거 */
         DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
         NavigationView navigationView = findViewById(R.id.menu_main_nav_leftview);
+        Menu left_menu = navigationView.getMenu();
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_schedule_main_fr, R.id.nav_schedule_second_fr, R.id.nav_schedule_third_fr)
                 .setDrawerLayout(drawer)
@@ -63,6 +67,34 @@ public class Menu_MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        left_menu.clear();
+        left_menu.add("Test");
+        left_menu.getItem(0).setCheckable(true);
+
+        drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                left_menu.clear();
+                left_menu.add("Test");
+                left_menu.getItem(0).setCheckable(true);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
         /*우측 햄버거*/
         NavigationView navigationView2 = findViewById(R.id.menu_main_nav_rightview);
@@ -110,6 +142,7 @@ public class Menu_MainActivity extends AppCompatActivity {
             /*----------엑티비티연결--------------*/
             @Override
             public void onClick(View view) {
+                System.out.println(1);
                 drawer.openDrawer(Gravity.LEFT);
             }
         });
