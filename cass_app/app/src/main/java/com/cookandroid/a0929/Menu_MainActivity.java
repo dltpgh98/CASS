@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 import com.applikeysolutions.cosmocalendar.model.Day;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.cookandroid.a0929.DB.FindMemberRequest;
+import com.cookandroid.a0929.DB.FindgroupcodeRequest;
 import com.cookandroid.a0929.DB.GroupValidateRequest;
 import com.cookandroid.a0929.List.ListViewAdapter;
 import com.cookandroid.a0929.List.Schedule_ListMainActivity;
@@ -49,12 +50,13 @@ public class Menu_MainActivity extends AppCompatActivity {
     public Toast toast;
     public CalendarView calendarView;
     final int[] group_code = new int[1];
+    String [] group_name = new String[1];
 
     List<Calendar> selectedDay;
 
     private int y_m_d[]=new int[3];//
 
-    private void find_groupcode(String user_code){
+    private void find_groupcode(int user_code){
 
         Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
             @Override
@@ -77,9 +79,36 @@ public class Menu_MainActivity extends AppCompatActivity {
         };
 
         FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
-        RequestQueue queue_findgroupcode = Volley.newRequestQueue( Menu_MainActivity.this );
-        queue_findgroupcode.add(findMemberRequest);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findMemberRequest);
 
+    }
+
+    private void find_groupname(int group_code){
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+                        group_name[0] =  jsonObject.getString("group_name");
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findgroupcodeRequest);
     }
 
 

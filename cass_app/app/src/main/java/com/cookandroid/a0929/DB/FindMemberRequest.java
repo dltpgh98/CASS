@@ -14,11 +14,11 @@ public class FindMemberRequest extends StringRequest {
     private Map<String, String> map;
 
 
-    public FindMemberRequest(String user_code, Response.Listener<String> listener) {
+    public FindMemberRequest(int user_code, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
-        map.put("user_code",user_code);
+        map.put("user_code",user_code + "");
     }
 
     @Override
