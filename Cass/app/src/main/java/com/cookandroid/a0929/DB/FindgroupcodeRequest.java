@@ -14,12 +14,12 @@ public class FindgroupcodeRequest extends StringRequest {
     private Map<String, String> map;
 
 
-    public FindgroupcodeRequest(String group_name, Response.Listener<String> listener) {
+    public FindgroupcodeRequest(int group_code, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
         System.out.println("FindgroupcodeRequest 호출");
         map = new HashMap<>();
-        map.put("group_name", group_name);
+        map.put("group_code", group_code + "");
 
     }
 

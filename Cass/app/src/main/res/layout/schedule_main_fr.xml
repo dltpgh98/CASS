@@ -54,13 +54,12 @@
                 android:layout_marginTop="10dp"/>
         </TableRow>
     </TableLayout>
-    <com.applikeysolutions.cosmocalendar.view.CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/schedule_main_fr_calendar_clv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:firstDayOfTheWeek="sunday"
-        app:orientation="horizontal"
-        app:selectedDayBackgroundColor="#f79256"
+
+        app:mcv_selectionColor = "#fff3f0a0"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

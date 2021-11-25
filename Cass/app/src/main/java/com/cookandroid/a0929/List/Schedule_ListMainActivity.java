@@ -17,6 +17,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.baoyz.widget.PullRefreshLayout;
 import com.cookandroid.a0929.R;
 
 public class Schedule_ListMainActivity extends AppCompatActivity {
@@ -34,7 +35,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
         /*    날짜 받는것    */
         Intent intent = getIntent();
         y_m_d = intent.getIntArrayExtra("main_select_Day");
-
+        int user_code = intent.getIntExtra("user_code", 0);
 
         //엑티비티연결
         Button wp_btn = (Button) findViewById(R.id.schedule_list_pen_btn);
@@ -44,6 +45,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Schedule_ListMainActivity.this, Schedule_pen.class);
                 //날짜 전달//
                 intent.putExtra("main_select_Day",y_m_d);
+                intent.putExtra("user_code",user_code);
                 startActivity(intent);
                 finish();
             }
@@ -159,6 +161,20 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                 }
                 // false : close the menu; true : not close the menu
                 return false;
+            }
+        });
+        //당겨서 새로고침
+        PullRefreshLayout PullRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        PullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.notifyDataSetChanged();
+                PullRefreshLayout.setRefreshing(false);
+                //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_CIRCLES);
+                //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_MATERIAL;
+                //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_WATER_DROP);
+                //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_RING);
+
             }
         });
     }

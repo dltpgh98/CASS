@@ -20,23 +20,17 @@ public class ScheduleRequest extends StringRequest {
 
     public ScheduleRequest(String title, String sdate, String edate, String text, String color, int usercode, int groupcode, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        try {
-            Date to = transFormat.parse(sdate);
-            System.out.println("Date :"+ to);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            System.out.println("e.printStackTrace():"+e);
-        }
+
+        System.out.println("ScheduleRequest" +usercode + " " + groupcode);
         map = new HashMap<>();
         map.put("schedule_title", title);
         map.put("schedule_sdate", sdate);
         map.put("schedule_edate", edate);
         map.put("schedule_text", text);
         map.put("schedule_color", color);
-        map.put("user_code",usercode+"");
-        map.put("group_code", groupcode+"");
+        map.put("user_code",usercode + "");
+        map.put("group_code", groupcode + "");
 
     }
 

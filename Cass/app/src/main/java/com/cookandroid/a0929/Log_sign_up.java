@@ -39,7 +39,7 @@ public class Log_sign_up extends AppCompatActivity {
     Pattern p = Patterns.EMAIL_ADDRESS;
     private Button btn, checkbtn;
     final int[] user_code = new int[1];
-    final int[] group_code = new int[1];
+
 
     private void make_random(String user_name, String user_id, String user_pw){
 
@@ -87,7 +87,7 @@ public class Log_sign_up extends AppCompatActivity {
                     System.out.println("make_group 리스너 호출");
                     JSONObject jsonObject = new JSONObject( response );
                     boolean success = jsonObject.getBoolean( "success" );
-                    findUsercode(user_id, user_pw, user_name);
+                    findUsercode(user_id, user_pw, randomValue[0]);
                     if (success) {
 
                     }
@@ -106,7 +106,7 @@ public class Log_sign_up extends AppCompatActivity {
     }
 
 
-    private void findUsercode (String user_id, String user_pw, String user_name){
+    private void findUsercode (String user_id, String user_pw, int randomValue){
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -119,7 +119,8 @@ public class Log_sign_up extends AppCompatActivity {
                     boolean success = jsonObject.getBoolean("success");
                     if (success) {
                         user_code[0] = jsonObject.getInt("user_code");
-                        findGroupcode(user_name, user_code[0]);
+                        //findGroupcode(user_name, user_code[0]);
+                        makeMamber(user_code[0], randomValue);
                     } else {
 
                     }
@@ -135,35 +136,34 @@ public class Log_sign_up extends AppCompatActivity {
 
     }
 
-
-    private void findGroupcode (String group_name, int user_code){
-
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    // TODO : 인코딩 문제때문에 한글 DB인 경우 로그인 불가
-                    System.out.println("findGroupcode" + response);
-                    JSONObject jsonObject = new JSONObject(response);
-                    System.out.println("group_code 리스너 호출");
-                    boolean success = jsonObject.getBoolean("success");
-                    if (success) {
-                        group_code[0] = jsonObject.getInt("group_code");
-                        makeMamber(user_code, group_code[0]);
-                    } else {
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        System.out.println("group_code 호출");
-        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_name, responseListener);
-        RequestQueue queue_group = Volley.newRequestQueue(Log_sign_up.this);
-        queue_group.add(findgroupcodeRequest);
-
-    }
+//    private void findGroupcode (String group_name, int user_code){
+//
+//
+//        Response.Listener<String> responseListener = new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    // TODO : 인코딩 문제때문에 한글 DB인 경우 로그인 불가
+//                    System.out.println("findGroupcode" + response);
+//                    JSONObject jsonObject = new JSONObject(response);
+//                    System.out.println("group_code 리스너 호출");
+//                    boolean success = jsonObject.getBoolean("success");
+//                    if (success) {
+//                        group_code[0] = jsonObject.getInt("group_code");
+//                        makeMamber(user_code, group_code[0]);
+//                    } else {
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        System.out.println("group_code 호출");
+//        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_name, responseListener);
+//        RequestQueue queue_group = Volley.newRequestQueue(Log_sign_up.this);
+//        queue_group.add(findgroupcodeRequest);
+//
+//    }
 
 
     private void makeMamber (int user_code, int group_code){

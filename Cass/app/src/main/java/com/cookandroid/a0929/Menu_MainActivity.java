@@ -9,12 +9,19 @@ import android.view.Menu;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.applikeysolutions.cosmocalendar.model.Day;
-import com.applikeysolutions.cosmocalendar.view.CalendarView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.cookandroid.a0929.DB.FindMemberRequest;
+import com.cookandroid.a0929.DB.FindgroupcodeRequest;
 import com.cookandroid.a0929.List.ListViewAdapter;
 import com.cookandroid.a0929.List.Schedule_ListMainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -25,10 +32,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Calendar;
-import java.util.HashSet;
+
 import java.util.List;
 
 public class Menu_MainActivity extends AppCompatActivity {
@@ -38,11 +46,71 @@ public class Menu_MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration2;
     private long backKeyPressedTime = 0;
     public Toast toast;
-    public CalendarView calendarView;
 
-    List<Calendar> selectedDay;
+    final int[] group_code = new int[1];
+    String [] group_name = new String[1];
 
+    /**/
     private int y_m_d[]=new int[3];//
+
+    MaterialCalendarView materialCalendarView;
+    List<CalendarDay> selectedDay;
+
+    private void find_groupcode(int user_code){
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+                        group_code[0] = jsonObject.getInt("group_code");
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findMemberRequest);
+
+    }
+
+    private void find_groupname(int group_code){
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+                        group_name[0] =  jsonObject.getString("group_name");
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findgroupcodeRequest);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +118,13 @@ public class Menu_MainActivity extends AppCompatActivity {
         setContentView(R.layout.menu_main);
         Toolbar toolbar = findViewById(R.id.menu_leftappbar_main_toolbar);
         setSupportActionBar(toolbar);
-        calendarView = (CalendarView)findViewById(R.id.schedule_main_fr_calendar_clv);
+        materialCalendarView = (MaterialCalendarView) findViewById(R.id.schedule_main_fr_calendar_clv);
 
+
+
+        Intent intent = getIntent();
+        int user_code = intent.getIntExtra("user_code", 0);
+        System.out.println(user_code);
 
         /*좌측 햄버거 */
         DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
@@ -115,14 +188,13 @@ public class Menu_MainActivity extends AppCompatActivity {
             /*----------엑티비티연결--------------*/
             @Override
             public void onClick(View view) {
-
+                selectedDay= materialCalendarView.getSelectedDates();
+                System.out.println(selectedDay);
                 InitializeDay();//날짜 초기화
 
-                int s = 1;
                 Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
                 intent.putExtra("main_select_Day",y_m_d);
-                intent.putExtra("text",s);
-
+                intent.putExtra("user_code", user_code);
                 startActivity(intent);
             }
         });
@@ -146,10 +218,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         });
         /*캘린더 주말 색상*/
 
-        calendarView.setWeekendDays(new HashSet(){{
-            add(Calendar.SATURDAY);
-            add(Calendar.SUNDAY);
-        }});
+
     }
     /*버튼 2번눌렀을시 종료 코드 */
     @Override
@@ -216,7 +285,7 @@ public class Menu_MainActivity extends AppCompatActivity {
 
     public void InitializeDay(){
 
-        selectedDay=calendarView.getSelectedDates();
+        selectedDay= materialCalendarView.getSelectedDates();
 
         if(selectedDay.toString()=="[]"){       //선택 하지 않았을때 상태가[]이기 때문에 맞다면 현재 시간을 받아 초기화 시켜줌
             final Calendar calendar = Calendar.getInstance();
@@ -225,14 +294,15 @@ public class Menu_MainActivity extends AppCompatActivity {
             final int year = calendar.get(Calendar.YEAR);
             y_m_d[0]=year; y_m_d[1]=month;  y_m_d[2]=day;
         }else {                                 //선택한 날로 초기화
-            Calendar calendar = selectedDay.get(0);
-            final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            final int month = calendar.get(Calendar.MONTH);
-            final int year = calendar.get(Calendar.YEAR);
-            y_m_d[0] = year; y_m_d[1] = month; y_m_d[2] = day;
+            CalendarDay calendar = selectedDay.get(0);
+            y_m_d[0] = calendar.getYear();  y_m_d[1] = calendar.getMonth(); y_m_d[2] = calendar.getDay();
+            for (int i=0;i<3;i++){
+                System.out.println(y_m_d[i]);
+            }
         }
 
     }
+
 
     public void InitializeCalendar(){
         //그룹 코드,password,
