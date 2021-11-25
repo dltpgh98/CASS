@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.cookandroid.a0929.DB.FindMemberRequest;
 import com.cookandroid.a0929.DB.RegisterRequest;
 import com.cookandroid.a0929.DB.ScheduleRequest;
 import com.cookandroid.a0929.Log_sign_up;
@@ -45,6 +46,8 @@ public class Schedule_pen extends AppCompatActivity
     //날짜 및 시간정보 저장 변수//
     private int s_year, s_month, s_date, s_hour, s_minute;
     private int e_year, e_month, e_date, e_hour, e_minute;
+    private int[] user_code = new int[1];
+    private int[] group_code = new int[1];
     private Date sd,ed, ssd, sed;
     /*선택 날짜 배열*/
     private int y_m_d[];
@@ -88,7 +91,7 @@ public class Schedule_pen extends AppCompatActivity
         /*    날짜 받는것    */
         Intent intent = getIntent();
         y_m_d = intent.getIntArrayExtra("main_select_Day");
-
+        user_code[0] = intent.getIntExtra("user_code", 0);
 
         //뷰 초기화//
         InitializeView();
@@ -102,6 +105,68 @@ public class Schedule_pen extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }
+
+
+    private void make_schedule(String s_title, int groupcode, String s_text, String s_color ){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    System.out.println("make_schedule" + response);
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+
+                    } else {
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        System.out.println(groupcode);
+        //서버로 Volley를 이용해서 요청
+        ScheduleRequest scheduleRequest = new ScheduleRequest(s_title, db_sdate + ":00", db_edate + ":00", s_text, s_color, user_code[0], groupcode,responseListener);
+        RequestQueue queue = Volley.newRequestQueue( Schedule_pen.this );
+        queue.add( scheduleRequest );
+
+    }
+
+
+    private void find_groupcode(String s_title, String s_text, String s_color, int user_code){
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    System.out.println("findgroupcode" + response);
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+                        group_code[0] = jsonObject.getInt("group_code");
+                        make_schedule(s_title, group_code[0], s_text, s_color);
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue( Schedule_pen.this );
+        queue.add(findMemberRequest);
+
+    }
+
+
 
     private void InitializeView() {//뷰 아이디 지정//
         //텍스트뷰//
@@ -167,17 +232,23 @@ public class Schedule_pen extends AppCompatActivity
 
         bck_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {finish();}
+            public void onClick(View view) {
+                finish();
+            }
         });
 
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {finish();}
+            public void onClick(View view) {
+                finish();
+            }
         });
 
         colorM.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {anim();}
+            public void onClick(View view) {
+                anim();
+            }
         });
 
         color1.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +257,7 @@ public class Schedule_pen extends AppCompatActivity
                 anim();
                 colorM.setBackgroundTintList(ColorStateList.valueOf(Color
                         .parseColor("#ff7a7cc4")));
-                color="#ff7a7cc4";
+                color = "#ff7a7cc4";
             }
         });
 
@@ -196,7 +267,7 @@ public class Schedule_pen extends AppCompatActivity
                 anim();
                 colorM.setBackgroundTintList(ColorStateList.valueOf(Color
                         .parseColor("#ffff6600")));
-                color="#ffff6600";
+                color = "#ffff6600";
             }
         });
 
@@ -206,7 +277,7 @@ public class Schedule_pen extends AppCompatActivity
                 anim();
                 colorM.setBackgroundTintList(ColorStateList.valueOf(Color
                         .parseColor("#ff259999")));
-                color="#ff259999";
+                color = "#ff259999";
             }
         });
         color4.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +286,7 @@ public class Schedule_pen extends AppCompatActivity
                 anim();
                 colorM.setBackgroundTintList(ColorStateList.valueOf(Color
                         .parseColor("#ff75c52a")));
-                color="#ff75c52a";
+                color = "#ff75c52a";
             }
         });
         color5.setOnClickListener(new View.OnClickListener() {
@@ -224,20 +295,18 @@ public class Schedule_pen extends AppCompatActivity
                 anim();
                 colorM.setBackgroundTintList(ColorStateList.valueOf(Color
                         .parseColor("#ffe9a5a7")));
-                color="#ffe9a5a7";
+                color = "#ffe9a5a7";
             }
         });
 
         //시작 날짜가 변경되었을때 이벤트//
-        callback_s_date = new DatePickerDialog.OnDateSetListener()
-        {
+        callback_s_date = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int y, int m, int d)
-            {
+            public void onDateSet(DatePicker view, int y, int m, int d) {
                 s_year = y;
                 s_month = m;
                 s_date = d;
-                sd = new Date(s_year,s_month,s_date,s_hour,s_minute);
+                sd = new Date(s_year, s_month, s_date, s_hour, s_minute);
                 String format;
                 format = dateFormat.format(sd);
                 start_day_time.setText(format);
@@ -245,13 +314,12 @@ public class Schedule_pen extends AppCompatActivity
         };
 
         //시작 시간이 변경되었을때 이벤트//
-        callback_s_time = new TimePickerDialog.OnTimeSetListener()
-        {
+        callback_s_time = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int h, int m) {
                 s_hour = h;
                 s_minute = m;
-                sd = new Date(s_year,s_month,s_date,s_hour,s_minute);
+                sd = new Date(s_year, s_month, s_date, s_hour, s_minute);
                 String format;
                 format = timeFormat.format(sd);
                 start_hm_time.setText(format);
@@ -259,15 +327,13 @@ public class Schedule_pen extends AppCompatActivity
         };
 
         //종료 날짜가 변경되었을때 이벤트//
-        callback_e_date = new DatePickerDialog.OnDateSetListener()
-        {
+        callback_e_date = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int y, int m, int d)
-            {
+            public void onDateSet(DatePicker view, int y, int m, int d) {
                 e_year = y;
                 e_month = m;
                 e_date = d;
-                ed = new Date(e_year,e_month,e_date,e_hour,e_minute);
+                ed = new Date(e_year, e_month, e_date, e_hour, e_minute);
                 String format;
                 format = dateFormat.format(ed);
                 end_day_time.setText(format);
@@ -276,13 +342,12 @@ public class Schedule_pen extends AppCompatActivity
         };
 
         //종료 시간이 변경되었을때 이벤트//
-        callback_e_time = new TimePickerDialog.OnTimeSetListener()
-        {
+        callback_e_time = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int h, int m) {
                 e_hour = h;
                 e_minute = m;
-                ed = new Date(e_year,e_month,e_date,e_hour,e_minute);
+                ed = new Date(e_year, e_month, e_date, e_hour, e_minute);
                 String format;
                 format = timeFormat.format(ed);
                 end_hm_time.setText(format);
@@ -298,58 +363,33 @@ public class Schedule_pen extends AppCompatActivity
                 String s_text = memo.getText().toString();
                 String s_color = color;
                 String s_write = writer;
-                int user_code = 105;
-                int group_code = 932882;
 
                 //디비 저장용
                 String format;
-                ssd = new Date(s_year-1900,s_month,s_date,s_hour,s_minute);
-                sed = new Date(e_year-1900,e_month,e_date,e_hour,e_minute);
+                ssd = new Date(s_year - 1900, s_month, s_date, s_hour, s_minute);
+                sed = new Date(e_year - 1900, e_month, e_date, e_hour, e_minute);
                 format = saveFormat.format(ssd);
                 db_sdate = format;
                 format = saveFormat.format(sed);
                 db_edate = format;
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                find_groupcode(s_title, s_text, s_color, user_code[0]);
 
-                        try {
-                            JSONObject jsonObject = new JSONObject( response );
-                            boolean success = jsonObject.getBoolean( "success" );
-
-                                if (success) {
-
-                                    Intent intent = new Intent(Schedule_pen.this, Schedule_ListMainActivity.class);
-                                    intent.putExtra("제목",s_title);
-                                    intent.putExtra("시작날짜",sdate);
-                                    intent.putExtra("종료날짜",edate);
-                                    intent.putExtra("메모",s_text);
-                                    intent.putExtra("컬러",s_color);
-                                    intent.putExtra("작성자",s_write);
-                                    intent.putExtra("main_select_Day",y_m_d);
-                                    startActivity(intent);
-                                    finish();
-                                    //회원가입 실패시
-                                } else {
-                                    return;
-                                }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-                System.out.println("시작시간" + db_sdate);
-                System.out.println("종료시간" +db_edate);
-                //서버로 Volley를 이용해서 요청
-                ScheduleRequest scheduleRequest = new ScheduleRequest(s_title, db_sdate + ":00", db_edate + ":00", s_text, s_color, user_code,group_code,responseListener);
-                RequestQueue queue = Volley.newRequestQueue( Schedule_pen.this );
-                queue.add( scheduleRequest );
+                Intent intent = new Intent(Schedule_pen.this, Schedule_ListMainActivity.class);
+                intent.putExtra("제목", s_title);
+                intent.putExtra("시작날짜", sdate);
+                intent.putExtra("종료날짜", edate);
+                intent.putExtra("메모", s_text);
+                intent.putExtra("컬러", s_color);
+                intent.putExtra("작성자", s_write);
+                intent.putExtra("main_select_Day", y_m_d);
+                startActivity(intent);
+                finish();
 
             }
         });
     }
+
 
     public void anim() {
 

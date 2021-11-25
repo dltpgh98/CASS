@@ -95,7 +95,7 @@ public class Log_in extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             // TODO : 인코딩 문제때문에 한글 DB인 경우 로그인 불가
-                            System.out.println("hongchul" + response);
+                            System.out.println("login" + response);
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             if (success) { // 로그인에 성공한 경우

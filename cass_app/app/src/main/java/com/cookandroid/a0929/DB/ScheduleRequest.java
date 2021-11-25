@@ -21,6 +21,8 @@ public class ScheduleRequest extends StringRequest {
     public ScheduleRequest(String title, String sdate, String edate, String text, String color, int usercode, int groupcode, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
+
+        System.out.println("ScheduleRequest" +usercode + " " + groupcode);
         map = new HashMap<>();
         map.put("schedule_title", title);
         map.put("schedule_sdate", sdate);

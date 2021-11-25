@@ -26,6 +26,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
         /*    날짜 받는것    */
         Intent intent = getIntent();
         y_m_d = intent.getIntArrayExtra("main_select_Day");
+        int user_code = intent.getIntExtra("user_code", 0);
 
 
         //엑티비티연결
@@ -36,6 +37,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Schedule_ListMainActivity.this, Schedule_pen.class);
                 //날짜 전달//
                 intent.putExtra("main_select_Day",y_m_d);
+                intent.putExtra("user_code",user_code);
                 startActivity(intent);
                 finish();
             }

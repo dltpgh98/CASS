@@ -19,6 +19,8 @@ public class FindMemberRequest extends StringRequest {
 
         map = new HashMap<>();
         map.put("user_code",user_code + "");
+
+        System.out.println("FindMemberRequest" + user_code);
     }
 
     @Override

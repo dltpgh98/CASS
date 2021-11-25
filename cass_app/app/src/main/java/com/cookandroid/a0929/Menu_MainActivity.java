@@ -58,7 +58,7 @@ public class Menu_MainActivity extends AppCompatActivity {
 
     private void find_groupcode(int user_code){
 
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -78,7 +78,7 @@ public class Menu_MainActivity extends AppCompatActivity {
             }
         };
 
-        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
+        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener);
         RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
         queue.add(findMemberRequest);
 
@@ -164,7 +164,7 @@ public class Menu_MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
                 intent.putExtra("main_select_Day",y_m_d);
                 intent.putExtra("text",s);
-
+                intent.putExtra("user_code", user_code);
                 startActivity(intent);
             }
         });

@@ -39,7 +39,7 @@ public class Log_sign_up extends AppCompatActivity {
     Pattern p = Patterns.EMAIL_ADDRESS;
     private Button btn, checkbtn;
     final int[] user_code = new int[1];
-    final int[] group_code = new int[1];
+
 
     private void make_random(String user_name, String user_id, String user_pw){
 
