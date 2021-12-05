@@ -8,6 +8,9 @@ public class ListItem {
     private String memo;
     private String color;
     private String writer;
+    private int group_code;
+    private int schedule_code;
+
 
     public String getTitle() {
         return title;
@@ -54,5 +57,26 @@ public class ListItem {
 
     public void setWriter(String writer) {
         this.writer = writer;
+    }
+
+    public int getGroup_code() {
+        return group_code;
+    }
+
+    public void setGroup_code(int group_code) {
+        this.group_code = group_code;
+    }
+
+
+    public ListItem(String title, String sdate, String edate, String memo, String color, String writer, int group_code, int schedule_code) {
+        this.title = title;
+        this.sdate = sdate;
+        this.edate = edate;
+        this.memo = memo;
+        this.color = color;
+        this.writer = writer;
+        this.group_code = group_code;
+        this.schedule_code = schedule_code;
+
     }
 }

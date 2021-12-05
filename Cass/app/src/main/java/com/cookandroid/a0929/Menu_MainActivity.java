@@ -1,12 +1,14 @@
 package com.cookandroid.a0929;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -17,6 +19,7 @@ import com.cookandroid.a0929.DB.FindMemberRequest;
 import com.cookandroid.a0929.DB.FindgroupcodeRequest;
 import com.cookandroid.a0929.List.ListViewAdapter;
 import com.cookandroid.a0929.List.Schedule_ListMainActivity;
+import com.cookandroid.a0929.ui.deco.OneDayDecorator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -24,6 +27,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,9 +36,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.List;
@@ -47,14 +59,27 @@ public class Menu_MainActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;
     public Toast toast;
 
+    TextView mainName;
+
     final int[] group_code = new int[1];
     String [] group_name = new String[1];
 
     /**/
     private int y_m_d[]=new int[3];//
+    int user_code;
+    int init = 0;
 
     MaterialCalendarView materialCalendarView;
     List<CalendarDay> selectedDay;
+
+    ArrayList<Integer> user_code_array;
+    ArrayList<String> user_name_array;
+    ArrayList<Integer> group_code_array;
+    ArrayList<String> group_name_array;
+    ArrayList<Integer> member_role_array;
+
+    ArrayList<Integer> able_group_code_array;
+
 
     private void find_groupcode(int user_code){
 
@@ -65,9 +90,11 @@ public class Menu_MainActivity extends AppCompatActivity {
 
                     JSONObject jsonObject = new JSONObject( response );
                     boolean success = jsonObject.getBoolean( "success" );
-
+                    System.out.println("리스너 gc"+success);
                     if (success) {
                         group_code[0] = jsonObject.getInt("group_code");
+                        System.out.println("리스너 gc"+group_code[0]);
+
                     }
                     else {
 
@@ -81,34 +108,6 @@ public class Menu_MainActivity extends AppCompatActivity {
         FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
         RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
         queue.add(findMemberRequest);
-
-    }
-
-    private void find_groupname(int group_code){
-
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject jsonObject = new JSONObject( response );
-                    boolean success = jsonObject.getBoolean( "success" );
-
-                    if (success) {
-                        group_name[0] =  jsonObject.getString("group_name");
-                    }
-                    else {
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_code, responseListener_groupcode);
-        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
-        queue.add(findgroupcodeRequest);
     }
 
 
@@ -120,11 +119,17 @@ public class Menu_MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         materialCalendarView = (MaterialCalendarView) findViewById(R.id.schedule_main_fr_calendar_clv);
 
+        OneDayDecorator oneDayDecorator = new OneDayDecorator();
+        materialCalendarView.addDecorators(oneDayDecorator);
+
 
 
         Intent intent = getIntent();
-        int user_code = intent.getIntExtra("user_code", 0);
+        user_code = intent.getIntExtra("user_code", 0);
+        String user_name = intent.getStringExtra("user_name");
         System.out.println(user_code);
+        find_groupcode(user_code);
+
 
         /*좌측 햄버거 */
         DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
@@ -138,49 +143,44 @@ public class Menu_MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        left_menu.clear();
-        left_menu.add("Test");
-        left_menu.getItem(0).setCheckable(true);
+        new DrawerTask().execute();
 
-        drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                left_menu.clear();
-                left_menu.add("Test");
-                left_menu.getItem(0).setCheckable(true);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
+        View left_header = navigationView.getHeaderView(0);
+        TextView l_title = left_header.findViewById(R.id.menu_leftheader_name);
+        l_title.setText(user_name);
 
 
-        /*우측 햄버거*/
+
+        //////////////////////////////////*우측 햄버거*/////////////////////////////////
         NavigationView navigationView2 = findViewById(R.id.menu_main_nav_rightview);
-        navigationView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+        View right_header = navigationView2.getHeaderView(0);
+        Button sett =(Button) right_header.findViewById(R.id.menu_rightheader_sett_btn);
+        sett.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_rightdrawer_item4:
-                        Intent intent = new Intent(Menu_MainActivity.this,SettingsActivity.class);
-                        startActivity(intent);
-                        return true;
-                }
-                return false;
+            public void onClick(View view) {
+                Intent intent = new Intent(Menu_MainActivity.this,SettingsActivity.class);
+                intent.putExtra("group_code",group_code[0]);
+                startActivity(intent);
             }
         });
+
+//        navigationView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()){
+//                    case R.id.menu_rightdrawer_item4:
+//                        Intent intent = new Intent(Menu_MainActivity.this,SettingsActivity.class);
+//                        intent.putExtra("group_code",group_code[0]);
+//                        startActivity(intent);
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
+
+
+
 
         //플로팅버튼으로 엑티비티 연결코드
         FloatingActionButton schedule_list_floatbtn = (FloatingActionButton) findViewById(R.id.schedule_main_fr_list_fbtn);
@@ -190,12 +190,15 @@ public class Menu_MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 selectedDay= materialCalendarView.getSelectedDates();
                 System.out.println(selectedDay);
-                InitializeDay();//날짜 초기화
+                //InitializeDay();//날짜 초기화
+                new BackgroundTask().execute();
+//                Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
+//                intent.putExtra("main_select_Day",y_m_d);
+//                intent.putExtra("user_code", user_code);
+//                intent.putExtra("user_name", user_name);
+//                intent.putExtra("group_code", group_code[0]);
 
-                Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
-                intent.putExtra("main_select_Day",y_m_d);
-                intent.putExtra("user_code", user_code);
-                startActivity(intent);
+//                startActivity(intent);
             }
         });
         //코드 끝
@@ -290,7 +293,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         if(selectedDay.toString()=="[]"){       //선택 하지 않았을때 상태가[]이기 때문에 맞다면 현재 시간을 받아 초기화 시켜줌
             final Calendar calendar = Calendar.getInstance();
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            final int month = calendar.get(Calendar.MONTH);
+            final int month = calendar.get(Calendar.MONTH)+1;
             final int year = calendar.get(Calendar.YEAR);
             y_m_d[0]=year; y_m_d[1]=month;  y_m_d[2]=day;
         }else {                                 //선택한 날로 초기화
@@ -302,10 +305,292 @@ public class Menu_MainActivity extends AppCompatActivity {
         }
 
     }
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+        String target;
 
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://3.34.182.164/list.php";
+        }
 
-    public void InitializeCalendar(){
-        //그룹 코드,password,
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try{
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while((temp = bufferedReader.readLine()) != null){
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                System.out.println(stringBuilder.toString());
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent tent = getIntent();
+            int user_code = tent.getIntExtra("user_code", 0);
+            String user_name = tent.getStringExtra("user_name");
+            System.out.println(user_code);
+            find_groupcode(user_code);
+            InitializeDay();//날짜 초기화
+
+            Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
+            intent.putExtra("scheduleList", result);//파싱한 값을 넘겨줌
+            intent.putExtra("group_code", group_code[0]);
+            intent.putExtra("main_select_Day",y_m_d);
+            intent.putExtra("user_code",user_code);
+            Menu_MainActivity.this.startActivity(intent);//ManagementActivity로 넘어감
+
+        }
+
+    }
+    class DrawerTask extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://3.34.182.164/menulist.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try{
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while((temp = bufferedReader.readLine()) != null){
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                System.out.println(stringBuilder.toString());
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
+
+                String user_name, group_name;
+                int user_code, group_code, member_role;
+                user_code_array = new ArrayList<>();
+                user_name_array = new ArrayList<>();
+                group_code_array = new ArrayList<>();
+                group_name_array = new ArrayList<>();
+                member_role_array = new ArrayList<>();
+
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONObject object = jsonArray.getJSONObject(i);
+
+                    user_code = object.getInt("user_code");
+                    group_code = object.getInt("group_code");
+                    user_name = object.getString("user_name");
+                    group_name = object.getString("group_name");
+                    member_role = object.getInt("member_role");
+
+                    user_code_array.add(user_code);
+                    group_code_array.add(group_code);
+                    user_name_array.add(user_name);
+                    group_name_array.add(group_name);
+                    member_role_array.add(member_role);
+                }
+
+                print_left_drawer();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    public void Left_Button(View view){
+        View dialogView = getLayoutInflater().inflate(R.layout.schedule_menu_group_fr, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setView(dialogView);
+        final AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
+
+        TextView plus_group = dialogView.findViewById(R.id.schedule_menu_group_fr_plus_tv);
+        TextView attend_group = dialogView.findViewById(R.id.schedule_menu_group_fr_attend_tv);
+        plus_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                View Pdialog = getLayoutInflater().inflate(R.layout.schedule_menu_plusgroup_fr,null);
+                AlertDialog.Builder p_dialog=new AlertDialog.Builder(view.getContext());
+                p_dialog.setView(Pdialog);
+                final AlertDialog aalertDialog = p_dialog.create();
+                aalertDialog.show();
+            }
+        });
+        attend_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                View Pdialog = getLayoutInflater().inflate(R.layout.schedule_menu_plusgroup_fr,null);
+                AlertDialog.Builder p_dialog=new AlertDialog.Builder(view.getContext());
+                p_dialog.setView(Pdialog);
+                final AlertDialog aalertDialog = p_dialog.create();
+                aalertDialog.show();
+            }
+        });
+
+    }
+    public void print_left_drawer(){
+        DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
+        NavigationView leftDrawerView = findViewById(R.id.menu_main_nav_leftview);
+        Menu left_menu = leftDrawerView.getMenu();
+
+        left_menu.clear();
+        able_group_code_array = new ArrayList<>();
+
+        for(int i = 0; i < user_code_array.size(); i++)
+        {
+            if (user_code_array.get(i).equals(user_code))
+            {
+                left_menu.add(group_name_array.get(i));
+                able_group_code_array.add(group_code_array.get(i));
+            }
+        }
+
+        for(int j = 0; j < left_menu.size(); j++)
+        {
+            left_menu.getItem(j).setCheckable(true);
+        }
+
+        if(init==0){
+            mainName = (TextView)findViewById(R.id.schedule_main_fr_name);
+            leftDrawerView.setCheckedItem(0);
+            init=1;
+            group_code[0] = able_group_code_array.get(0);
+            mainName.setText(left_menu.getItem(0).getTitle());
+        }
+
+        System.out.println(able_group_code_array);
+
+        drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                int i;
+                mainName = (TextView)findViewById(R.id.schedule_main_fr_name);
+
+                for(i = 0; i < left_menu.size(); i++)
+                {
+                    if(left_menu.getItem(i).isChecked())break;
+                }
+                group_code[0]= able_group_code_array.get(i);
+                mainName.setText(left_menu.getItem(i).getTitle());
+                print_right_drawer();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
+    }
+
+    public void print_right_drawer(){
+        DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
+        NavigationView rightDrawerView = findViewById(R.id.menu_main_nav_rightview);
+        Menu right_menu = rightDrawerView.getMenu();
+
+        right_menu.clear();
+        ArrayList<Integer> role = new ArrayList<>();
+
+        for(int i = 0; i < group_code_array.size(); i++)
+        {
+            if(group_code_array.get(i).equals(group_code[0]))
+            {
+                right_menu.add(user_name_array.get(i));
+                role.add(member_role_array.get(i));
+            }
+        }
+
+        for(int j = 0; j < right_menu.size(); j++)
+        {
+            right_menu.getItem(j).setChecked(false);
+            if(role.get(j).equals(1))
+            {
+
+                right_menu.getItem(j).setIcon(R.drawable.test);//<<<<이미지 수정해야됨
+            }
+        }
     }
 
 

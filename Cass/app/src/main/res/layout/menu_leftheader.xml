@@ -13,14 +13,14 @@
         android:id="@+id/menu_leftheader_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="김동훈"
+        android:text="이름"
         android:fontFamily="@font/fontstyle"
         android:textStyle="bold"
         android:textSize="25dp"
         android:layout_marginLeft="20dp"
         />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/menu_leftheader_mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,5 +29,18 @@
         android:textStyle="bold"
         android:textSize="18dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />-->
+
+    <ImageButton
+        android:id="@+id/menu_leftheader_button"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_marginTop="-40dp"
+        android:layout_gravity="right"
+        android:background="#00000000"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_plus"
+        android:clickable="true"
+        android:onClick="Left_Button"/>
+
 </LinearLayout>

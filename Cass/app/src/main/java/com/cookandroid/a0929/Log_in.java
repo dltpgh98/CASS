@@ -62,24 +62,7 @@ public class Log_in extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        /*--------------애니메이션---------------*/
-//        Animation scale = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale);
-//        Animation translate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
-//        ImageView img1 = (ImageView)findViewById(R.id.log_in_main_img);
-//        img1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                view.startAnimation(scale);
-//            }
-//        });
-//        TextView test1 = (TextView)findViewById(R.id.logintv);
-//        test1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, left_MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+
         Button btn = (Button) findViewById(R.id.log_in_ok_btn);
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -103,13 +86,17 @@ public class Log_in extends AppCompatActivity {
                                 String user_id = jsonObject.getString("user_id");
                                 String user_pw = jsonObject.getString("user_pw");
                                 String user_name = jsonObject.getString("user_name");
+                                String user_email = jsonObject.getString("user_email");
                                 int user_code = jsonObject.getInt("user_code");
+
 
                                 Toast.makeText(getApplicationContext(), user_name+"님 환영합니다.",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(Log_in.this, Menu_MainActivity.class);
                                 intent.putExtra("user_id", user_id);
                                 //intent.putExtra("user_pw", user_pw);
                                 intent.putExtra("user_code", user_code);
+                                intent.putExtra("user_name", user_name);
+                                intent.putExtra("user_email", user_email);
                                 startActivity(intent);
                                 finish();
                             } else { // 로그인에 실패한 경우

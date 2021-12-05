@@ -8,24 +8,71 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.widget.PullRefreshLayout;
+import com.cookandroid.a0929.DB.DeleteScheduleRequest;
 import com.cookandroid.a0929.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Schedule_ListMainActivity extends AppCompatActivity {
 
     private ListView listView;
     private ListViewAdapter adapter;
+    private List<ListItem> scheduleList;
+    private List<ListItem> saveList;
     /*선택 날짜 배열*/
     private int y_m_d[];
+
+    private void delate_schedule(int schedule_code) {
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    System.out.println("delate_schedule" + response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+
+                    if (success) {
+                        Toast.makeText(getApplicationContext(), "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        DeleteScheduleRequest deleteScheduleRequest = new DeleteScheduleRequest(schedule_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue(Schedule_ListMainActivity.this);
+        queue.add(deleteScheduleRequest);
+
+    }
+
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +83,57 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         y_m_d = intent.getIntArrayExtra("main_select_Day");
         int user_code = intent.getIntExtra("user_code", 0);
+        int group_code = intent.getIntExtra("group_code", 0);
+        int schedule_code = intent.getIntExtra("schedule_Code", 0);
+        System.out.println("스케줄 코드"+schedule_code );
+        String user_name = intent.getStringExtra("user_name");
+        listView = (ListView) findViewById(R.id.listview);
+        scheduleList = new ArrayList<ListItem>();
+        saveList = new ArrayList<ListItem>();
+
+        adapter = new ListViewAdapter(getApplicationContext(), scheduleList, this, saveList);
+        listView.setAdapter(adapter);
+
+        try {
+            //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
+            JSONObject jsonObject = new JSONObject(intent.getStringExtra("scheduleList"));
+            System.out.println(" 배열" + intent.getStringExtra("scheduleList"));
+
+            //List.php 웹페이지에서 response라는 변수명으로 JSON 배열을 만들었음..
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            int count = 0;
+
+            String title, sdate, edate, text, color, writer;
+            int groupcode, schedulecode;
+
+            //JSON 배열 길이만큼 반복문을 실행
+            while (count < jsonArray.length()) {
+                //count는 배열의 인덱스를 의미
+                JSONObject object = jsonArray.getJSONObject(count);
+
+                title = object.getString("schedule_title");//여기서 ID가 대문자임을 유의
+                sdate = object.getString("schedule_sdate");
+                edate = object.getString("schedule_edate");
+                text = object.getString("schedule_text");
+                color = object.getString("schedule_color");
+                writer = object.getString("user_name");
+                groupcode = object.getInt("group_code");
+                schedulecode = object.getInt("schedule_code");
+
+                //System.out.println("여기"+schedulecode);
+
+                //값들을 User클래스에 묶어줍니다
+                ListItem list = new ListItem(title, sdate, edate, text, color, writer, groupcode, schedulecode);
+                //scheduleList.add(list);//리스트뷰에 값을 추가해줍니다
+                saveList.add(list);
+                count++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        searchUser(group_code);
+
 
         //엑티비티연결
         Button wp_btn = (Button) findViewById(R.id.schedule_list_pen_btn);
@@ -45,9 +143,10 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Schedule_ListMainActivity.this, Schedule_pen.class);
                 //날짜 전달//
                 intent.putExtra("main_select_Day",y_m_d);
-                intent.putExtra("user_code",user_code);
+                intent.putExtra("user_code", user_code);
+                intent.putExtra("group_code", group_code);
                 startActivity(intent);
-                finish();
+
             }
         });
         //엑티비티연결
@@ -61,23 +160,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        listView = (ListView) findViewById(R.id.listview);
 
-        adapter = new ListViewAdapter(Schedule_ListMainActivity.this);
-        listView.setAdapter(adapter);
-
-        // 데이터 추가하기
-        Intent getintent = getIntent();
-        String s1 = getintent.getStringExtra("제목");
-        String s2 = getintent.getStringExtra("시작날짜");
-        String s3 = getintent.getStringExtra("종료날짜");
-        String s4 = getintent.getStringExtra("메모");
-        String s5 = getintent.getStringExtra("컬러");
-        String s6 = getintent.getStringExtra("작성자");
-        if(s1!=null) {
-            adapter.addItem(s1, s2, s3, s4, s5, s6);
-            adapter.notifyDataSetChanged();
-        };
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu menu) {
@@ -151,6 +234,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 adapter.deleteItem(deleteid);
+
                             }
                         });
                         builder.setNegativeButton("아니오",null);
@@ -169,6 +253,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 adapter.notifyDataSetChanged();
+
                 PullRefreshLayout.setRefreshing(false);
                 //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_CIRCLES);
                 //PullRefreshLayout.setRefreshStyle(com.baoyz.widget.PullRefreshLayout.STYLE_MATERIAL;
@@ -177,5 +262,17 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void searchUser(int group_code) {
+        scheduleList.clear();
+        for (int i = 0; i < saveList.size(); i++) {
+            System.out.println("---------------------------------------");
+            System.out.println(saveList.get(i).getGroup_code());
+            System.out.println(group_code);
+            if (saveList.get(i).getGroup_code() == group_code) {//값이 있으면 true를 반환함
+                scheduleList.add(saveList.get(i));
+            }
+        }
+        adapter.notifyDataSetChanged();//어댑터에 값일 바뀐것을 알려줌
     }
 }

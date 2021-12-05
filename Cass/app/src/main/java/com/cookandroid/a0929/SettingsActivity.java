@@ -1,20 +1,26 @@
 package com.cookandroid.a0929;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
     SharedPreferences pref;
+    static int group_code ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_main);
-
+        Intent intent =getIntent();
+        group_code = intent.getIntExtra("group_code", 0);
         /*----------변경사항 자동저장--------(화면 회전시 데이터 손실방지)*/
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -41,12 +47,27 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.set_list, rootKey);
+
+
+            EditTextPreference signaturePreference_code = findPreference("setting_code");
+            EditTextPreference signaturePreference_pw = findPreference("setting_pw");
+            EditTextPreference signaturePreference_nickname = findPreference("setting_nickname");
+            ListPreference signaturePreference_intercept = findPreference("setting_Intercept");
+            ListPreference signaturePreference_ban = findPreference("setting_banuser");
+            EditTextPreference signaturePreference_dona = findPreference("setting_donation");
+
+            signaturePreference_code.setTitle("code: " +group_code);
+
+            //방장권한
+            int i =0; // 방장코드 확인
+            if (i==0) { //방장코드 확인
+                System.out.println(signaturePreference_pw);
+                if (signaturePreference_ban != null) {
+                    signaturePreference_ban.setVisible(true);
+                }if (signaturePreference_intercept != null) {
+                    signaturePreference_intercept.setVisible(true);
+                }
+            }
         }
     }
-    /*----------preference에 저장된 값 가져오기------*/
-    //@Override
-    //public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    //setPreferencesFromResource(R.xml.preferences, rootKey);
-    //EditTextPreference signaturePreference = findPreference("signature");
-    //}// do something with this preference
 }
