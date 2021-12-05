@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Menu_MainActivity">
+
+
+
+    <ImageView
+        android:id="@+id/log_pw_logo_iv"
+        android:src="@drawable/set_cass_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:layout_marginStart="165dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/log_pw_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PW찾기"
+        android:fontFamily="@font/fontstyle"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_logo_iv"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/log_pw_id_tl"
+        android:fontFamily="@font/fontstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="55dp"
+        android:hint="ID"
+        app:counterEnabled="true"
+        app:counterMaxLength="36"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_title_tv"
+        app:layout_constraintVertical_bias="0.35">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_pw_id_tet"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:fontFamily="@font/fontstyle"
+            android:textStyle="bold"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:maxLength="36"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/log_pw_email_tl"
+        android:fontFamily="@font/fontstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="0dp"
+        android:hint="EMAIL"
+        app:counterEnabled="true"
+        app:counterMaxLength="16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_id_tl"
+        app:layout_constraintVertical_bias="0.35">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_pw_email_tet"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:fontFamily="@font/fontstyle"
+            android:textStyle="bold"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:maxLength="16"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/log_pw_name_tl"
+        android:fontFamily="@font/fontstyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="0dp"
+        android:hint="NICK NAME"
+        app:counterEnabled="true"
+        app:counterMaxLength="16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_email_tl"
+        app:layout_constraintVertical_bias="0.35">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_pw_name_tet"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:fontFamily="@font/fontstyle"
+            android:textStyle="bold"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:maxLength="16"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/log_pw_err_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/fontstyle"
+        android:text="다시 입력해 주세요"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:textColor="@color/red_f"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_name_tl"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/log_pw_finish_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:fontFamily="@font/fontstyle"
+        android:text="완료"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/background_solid_button"
+        app:layout_constraintTop_toBottomOf="@id/log_pw_name_tl"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

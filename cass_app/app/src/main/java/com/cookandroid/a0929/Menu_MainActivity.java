@@ -9,8 +9,14 @@ import android.view.Menu;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.applikeysolutions.cosmocalendar.model.Day;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
+import com.cookandroid.a0929.DB.FindMemberRequest;
+import com.cookandroid.a0929.DB.FindgroupcodeRequest;
+import com.cookandroid.a0929.DB.GroupValidateRequest;
 import com.cookandroid.a0929.List.ListViewAdapter;
 import com.cookandroid.a0929.List.Schedule_ListMainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,11 +31,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class Menu_MainActivity extends AppCompatActivity {
     //schedule_main_fr
@@ -40,26 +50,93 @@ public class Menu_MainActivity extends AppCompatActivity {
     public Toast toast;
     public CalendarView calendarView;
 
+    public int[] group_code = new int[50];
+    public String[] group_name = new String[50];
+
     List<Calendar> selectedDay;
-    List<String> group_name;
-    List<String> group_code;
 
     private int y_m_d[]=new int[3];//
+
+    public Menu_MainActivity() {
+    }
+
+    private void find_groupcode(int user_code){
+
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+                    if (success) {
+                        group_code[0] = jsonObject.getInt("group_code");
+                        System.out.println(group_code[0]);
+                        find_groupname(group_code[0]);
+
+                    }
+                    else {
+                        System.out.print("실패");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findMemberRequest);
+
+    }
+
+    private void find_groupname(int group_code){
+
+        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject( response );
+                    boolean success = jsonObject.getBoolean( "success" );
+
+                    if (success) {
+                        group_name[0]=jsonObject.getString("group_name");
+                        System.out.print(group_name[0]);
+                    }
+                    else {
+
+                    }
+                    System.out.println(success);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        FindgroupcodeRequest findgroupcodeRequest = new FindgroupcodeRequest(group_code, responseListener_groupcode);
+        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
+        queue.add(findgroupcodeRequest);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_main);
-
         Toolbar toolbar = findViewById(R.id.menu_leftappbar_main_toolbar);
         setSupportActionBar(toolbar);
         calendarView = (CalendarView)findViewById(R.id.schedule_main_fr_calendar_clv);
 
 
+        Intent intent = getIntent();
+        int user_code = intent.getIntExtra("user_code", 0);
+        System.out.println(user_code);
+
         /*좌측 햄버거 */
         DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
         NavigationView navigationView = findViewById(R.id.menu_main_nav_leftview);
-        Menu left_menu = navigationView.getMenu();
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_schedule_main_fr, R.id.nav_schedule_second_fr, R.id.nav_schedule_third_fr)
                 .setDrawerLayout(drawer)
@@ -68,9 +145,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        left_menu.clear();
-        left_menu.add("Test");
-        left_menu.getItem(0).setCheckable(true);
+        Menu leftMenu = navigationView.getMenu();
 
         drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -85,9 +160,10 @@ public class Menu_MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-                left_menu.clear();
-                left_menu.add("Test");
-                left_menu.getItem(0).setCheckable(true);
+                leftMenu.clear();
+                find_groupcode(user_code);
+                leftMenu.add(group_name[0]);
+                leftMenu.getItem(0).setCheckable(true);
             }
 
             @Override
@@ -124,7 +200,7 @@ public class Menu_MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
                 intent.putExtra("main_select_Day",y_m_d);
                 intent.putExtra("text",s);
-
+                intent.putExtra("user_code", user_code);
                 startActivity(intent);
             }
         });
@@ -142,7 +218,6 @@ public class Menu_MainActivity extends AppCompatActivity {
             /*----------엑티비티연결--------------*/
             @Override
             public void onClick(View view) {
-                System.out.println(1);
                 drawer.openDrawer(Gravity.LEFT);
             }
         });

@@ -29,8 +29,6 @@ public class Log_in extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_in);
 
-
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         /*id pw 저장*/
@@ -97,7 +95,7 @@ public class Log_in extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             // TODO : 인코딩 문제때문에 한글 DB인 경우 로그인 불가
-                            System.out.println("hongchul" + response);
+                            System.out.println("login" + response);
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             if (success) { // 로그인에 성공한 경우
@@ -115,7 +113,6 @@ public class Log_in extends AppCompatActivity {
                                 finish();
                             } else { // 로그인에 실패한 경우
                                 tv1.setVisibility(View.VISIBLE);
-                                Toast.makeText(getApplicationContext(),"로그인에 실패하였습니다.",Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         } catch (JSONException e) {

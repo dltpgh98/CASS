@@ -22,12 +22,11 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/schedule_main_fr_menu_btn"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/set_icon_menu"
                 android:background="#00ff0000"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 />
             <View
                 android:layout_width="0dp"
@@ -46,12 +45,11 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/schedule_main_fr_group_btn"
                 android:layout_height="wrap_content"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:drawableTop="@drawable/set_icon_group_btn"
                 android:background="#00ff0000"
                 android:visibility="visible"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginRight="10dp" />
         </TableRow>
     </TableLayout>
     <com.applikeysolutions.cosmocalendar.view.CalendarView

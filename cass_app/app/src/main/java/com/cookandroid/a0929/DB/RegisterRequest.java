@@ -23,7 +23,7 @@ public class RegisterRequest extends StringRequest {
         map.put("user_pw", userPassword);
         map.put("user_email", userEmail);
         map.put("user_name", userName);
-        map.put("group_name", userName);
+
 
     }
 

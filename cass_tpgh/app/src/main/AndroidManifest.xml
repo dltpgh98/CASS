@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cookandroid.a0929">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_cass_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_cass_launcher"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.0929">
+        <activity android:name=".ui.Loading"
+            android:theme="@style/Theme.0929.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Log_in"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".Log_sign_up"></activity>
+        <activity android:name=".Log_pw"></activity>
+        <activity android:name=".Log_id"></activity>
+        <activity android:name=".Menu_MainActivity"
+            android:theme="@style/Theme.0929.NoActionBar"/>
+        <activity android:name=".List.Schedule_pen"/>
+        <activity android:name=".List.Schedule_ListMainActivity"/>
+    </application>
+
+</manifest>
