@@ -202,6 +202,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         delay.postDelayed(new Runnable() {
             @Override
             public void run() {
+                System.out.println(" ");
                 System.out.println("===============System Message===============");
                 System.out.println("현재 그룹코드 : " + group_code[0]);
                 System.out.println("============================================");
@@ -537,7 +538,11 @@ public class Menu_MainActivity extends AppCompatActivity {
                                             boolean success = jsonObject.getBoolean( "success" );
 
                                             if (success) {
-
+                                                System.out.println(" ");
+                                                System.out.println("===============System Message===============");
+                                                System.out.println("그룹명 : " + plus_name);
+                                                System.out.println("그룹코드 : " + randomV[0]);
+                                                System.out.println("============================================");
                                             }
 
                                         } catch (JSONException e) {
@@ -563,6 +568,12 @@ public class Menu_MainActivity extends AppCompatActivity {
                                         try {
                                             JSONObject jsonObject = new JSONObject( response );
                                             boolean success = jsonObject.getBoolean( "success" );
+                                            if(success){
+                                                System.out.println(" ");
+                                                System.out.println("===============System Message===============");
+                                                System.out.println("그룹 생성 완료 ["+plus_name+"("+randomV[0]+")] = "+user_code+" : "+1);
+                                                System.out.println("============================================");
+                                            }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -573,7 +584,7 @@ public class Menu_MainActivity extends AppCompatActivity {
                                 RequestQueue queue_member = Volley.newRequestQueue( Menu_MainActivity.this );
                                 queue_member.add(memberRequest);
                             }
-                        },200);
+                        },400);
 
                         delay.postDelayed(new Runnable() {
                             @Override
@@ -584,7 +595,7 @@ public class Menu_MainActivity extends AppCompatActivity {
                                 drawer.closeDrawer(Gravity.LEFT);
                                 new DrawerTask().execute();
                             }
-                        },1000);
+                        },600);
 
                     }
                 });
