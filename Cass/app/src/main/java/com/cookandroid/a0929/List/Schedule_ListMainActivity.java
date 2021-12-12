@@ -41,36 +41,6 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
     /*선택 날짜 배열*/
     private int y_m_d[];
 
-    private void delate_schedule(int schedule_code) {
-
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    System.out.println("delate_schedule" + response);
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-
-                    if (success) {
-                        Toast.makeText(getApplicationContext(), "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        DeleteScheduleRequest deleteScheduleRequest = new DeleteScheduleRequest(schedule_code, responseListener_groupcode);
-        RequestQueue queue = Volley.newRequestQueue(Schedule_ListMainActivity.this);
-        queue.add(deleteScheduleRequest);
-
-    }
-
-
-
-
 
 
 
@@ -145,6 +115,7 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
                 intent.putExtra("main_select_Day",y_m_d);
                 intent.putExtra("user_code", user_code);
                 intent.putExtra("group_code", group_code);
+                System.out.println("gruop_code : "+group_code);
                 startActivity(intent);
 
             }
@@ -161,92 +132,42 @@ public class Schedule_ListMainActivity extends AppCompatActivity {
         actionBar.hide();
 
 
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-                // create "Close" item
-                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9,0xC9,0xCE)));
-                // set item width
-                openItem.setWidth(200);
-                // set item title
-                openItem.setTitle("수정");
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // add to menu
-                menu.addMenuItem(openItem);
+//        SwipeMenuCreator creator = new SwipeMenuCreator() {
+//            @Override
+//            public void create(SwipeMenu menu) {
+//                // create "Close" item
+//                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+//                // set item background
+//                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9,0xC9,0xCE)));
+//                // set item width
+//                openItem.setWidth(200);
+//                // set item title
+//                openItem.setTitle("수정");
+//                // set item title font color
+//                openItem.setTitleColor(Color.WHITE);
+//                // set item title fontsize
+//                openItem.setTitleSize(18);
+//                // add to menu
+//                menu.addMenuItem(openItem);
+//
+//                // create "delete" item
+//                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+//                // set item background
+//                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,0x3F, 0x25)));
+//                // set item width
+//                deleteItem.setWidth(200);
+//                // set a icon
+//                deleteItem.setIcon(R.drawable.icon_delete);
+//                // add to menu
+//                menu.addMenuItem(deleteItem);
+//            }
+//        };
+//        SwipeMenuListView listview;
+//        listview =findViewById(R.id.listview);
+//        listview.setAdapter(adapter);   // 리스트가 뷰 된 이후에 다음 추가한다.
+//        listview.setMenuCreator(creator);
 
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(200);
-                // set a icon
-                deleteItem.setIcon(R.drawable.icon_delete);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-        SwipeMenuListView listview;
-        listview =findViewById(R.id.listview);
-        listview.setAdapter(adapter);   // 리스트가 뷰 된 이후에 다음 추가한다.
-        listview.setMenuCreator(creator);
 
-        listview.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-                listview.smoothOpenMenu(position);
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-                listview.smoothOpenMenu(position);
-            }
-        });
-        listview.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        // open
-                        //Toast.makeText(getApplicationContext(),"test3", Toast.LENGTH_SHORT).show();
-                        System.out.println(adapter.getCount());
-                        Object fixItem = adapter.getItem(0);
-
-                        break;
-                    case 1:
-                        // delete
-                        //여기에 삭제 버턴 클릭시 코딩
-                        long selectedid = adapter.getItemId(position);
-                        int deleteid = (int) selectedid;
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Schedule_ListMainActivity.this);
-                        builder.setTitle("삭제");
-                        builder.setMessage("정말 삭제하시겠습니까?");
-                        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                adapter.deleteItem(deleteid);
-
-                            }
-                        });
-                        builder.setNegativeButton("아니오",null);
-                        builder.setNeutralButton("취소",null);
-                        builder.create().show();
-
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
         //당겨서 새로고침
         PullRefreshLayout PullRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         PullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {

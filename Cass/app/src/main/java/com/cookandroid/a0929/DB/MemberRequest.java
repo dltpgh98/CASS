@@ -14,11 +14,8 @@ public class MemberRequest extends StringRequest {
     final static private String URL = "http://3.34.182.164/member.php";
     private Map<String, String> map;
 
-
-    public MemberRequest(int user_code, int group_code, Response.Listener<String> listener) {
+    public MemberRequest(int user_code, int group_code, int member_role, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
-
-        int member_role = 1;
 
         System.out.println("MemberRequest 호출");
         System.out.println("MemberRequest 값 호출" +  user_code +"   "+ group_code);

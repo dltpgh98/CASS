@@ -67,6 +67,13 @@ public class ListItem {
         this.group_code = group_code;
     }
 
+    public int getSchedule_code() {
+        return schedule_code;
+    }
+
+    public void setSchedule_code(int schedule_code) {
+        this.schedule_code = schedule_code;
+    }
 
     public ListItem(String title, String sdate, String edate, String memo, String color, String writer, int group_code, int schedule_code) {
         this.title = title;

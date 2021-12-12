@@ -2,6 +2,7 @@ package com.cookandroid.a0929;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.util.Patterns;
 import android.view.View;
@@ -40,8 +41,7 @@ public class Log_sign_up extends AppCompatActivity {
     private Button btn, checkbtn;
     final int[] user_code = new int[1];
 
-
-    private void make_random(String user_name, String user_id, String user_pw){
+    public void make_random(String user_name, String user_id, String user_pw){
 
         int minimumValue = 100000;
         int maximumValue = 999999;
@@ -165,7 +165,6 @@ public class Log_sign_up extends AppCompatActivity {
 //
 //    }
 
-
     private void makeMamber (int user_code, int group_code){
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {// ************멤버테이블 생성********************
@@ -184,10 +183,9 @@ public class Log_sign_up extends AppCompatActivity {
         //서버로 Volley를 이용해서 요청
         System.out.println("makeMamber 호출");
         System.out.println(user_code + "" + group_code);
-        MemberRequest memberRequest = new MemberRequest(user_code, group_code, responseListener);
+        MemberRequest memberRequest = new MemberRequest(user_code, group_code, 1, responseListener);
         RequestQueue queue_member = Volley.newRequestQueue( Log_sign_up.this );
         queue_member.add(memberRequest);
-
     }
 
 
@@ -300,10 +298,17 @@ public class Log_sign_up extends AppCompatActivity {
 
                                 if (success) {
                                     make_random(user_name, user_id, user_pw);
-                                    Toast.makeText(getApplicationContext(), String.format("%s님 가입을 환영합니다.", user_id), Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(Log_sign_up.this, Menu_MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                    Handler handler=new Handler();
+
+                                    handler.postDelayed(new Runnable(){
+                                        public void run(){
+                                            Toast.makeText(getApplicationContext(), String.format("%s님 가입을 환영합니다.", user_id), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(Log_sign_up.this, Log_in.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    },1000);
+
                                     //회원가입 실패시
                                 } else {
                                     Toast.makeText(getApplicationContext(), "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
@@ -324,6 +329,8 @@ public class Log_sign_up extends AppCompatActivity {
                 RegisterRequest registerRequest = new RegisterRequest( user_id, user_pw, user_email, user_name, responseListener);
                 RequestQueue queue = Volley.newRequestQueue( Log_sign_up.this );
                 queue.add(registerRequest);
+
+
             }
 
         });

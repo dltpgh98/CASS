@@ -25,15 +25,12 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.cookandroid.a0929.DB.FindMemberRequest;
 import com.cookandroid.a0929.DB.FindschedulecodeRequest;
-import com.cookandroid.a0929.DB.RegisterRequest;
 import com.cookandroid.a0929.DB.ScheduleRequest;
-import com.cookandroid.a0929.Log_sign_up;
 import com.cookandroid.a0929.Menu_MainActivity;
 import com.cookandroid.a0929.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.app.AlertDialog;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,8 +40,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.util.Calendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,9 +51,12 @@ public class Schedule_pen extends AppCompatActivity
     private int e_year, e_month, e_date, e_hour, e_minute;
     private Date sd,ed, ssd, sed;
 
-    private int[] user_code = new int[1];
+    private int[] userCode = new int[1];
     private int[] group_code = new int[1];
     private int[] schedule_code = new int[1];
+    private String[] s_title = new String[1];
+    private String[] s_text = new String[1];
+    private String[] s_color = new String[1];
     /*선택 날짜 배열*/
     private int y_m_d[];
 
@@ -101,8 +99,8 @@ public class Schedule_pen extends AppCompatActivity
         /*    날짜 받는것    */
         Intent intent = getIntent();
         y_m_d = intent.getIntArrayExtra("main_select_Day");
-        user_code[0] = intent.getIntExtra("user_code", 0);
-        System.out.println("user_code[o]"+user_code[0]);
+        userCode[0] = intent.getIntExtra("user_code", 0);
+        System.out.println("user_code[o]"+ userCode[0]);
 
         //뷰 초기화//
         InitializeView();
@@ -158,7 +156,7 @@ public class Schedule_pen extends AppCompatActivity
                     boolean success = jsonObject.getBoolean( "success" );
 
                     if (success) {
-                        find_schedulecode(user_code[0], groupcode);
+                        find_schedulecode(userCode[0], groupcode);
                     } else {
                         return;
                     }
@@ -170,40 +168,12 @@ public class Schedule_pen extends AppCompatActivity
         };
         System.out.println(groupcode);
         //서버로 Volley를 이용해서 요청
-        ScheduleRequest scheduleRequest = new ScheduleRequest(s_title, db_sdate + ":00", db_edate + ":00", s_text, s_color, user_code[0], groupcode,responseListener);
+        ScheduleRequest scheduleRequest = new ScheduleRequest(s_title, db_sdate + ":00", db_edate + ":00", s_text, s_color, userCode[0], groupcode,responseListener);
         RequestQueue queue = Volley.newRequestQueue( Schedule_pen.this );
         queue.add( scheduleRequest );
     }
 
-    private void find_groupcode(String s_title, String s_text, String s_color, int user_code){
 
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    System.out.println("findgroupcode" + response);
-                    System.out.println("user_code" + user_code);
-                    JSONObject jsonObject = new JSONObject( response );
-                    boolean success = jsonObject.getBoolean( "success" );
-
-                    if (success) {
-                        group_code[0] = jsonObject.getInt("group_code");
-                        make_schedule(s_title, group_code[0], s_text, s_color);
-                    }
-                    else {
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
-        RequestQueue queue = Volley.newRequestQueue( Schedule_pen.this );
-        queue.add(findMemberRequest);
-
-    }
     private void InitializeView() {//뷰 아이디 지정//
         //텍스트뷰//
         start_day_time = (TextView) findViewById(R.id.schedule_pen_startdate_tv);
@@ -394,11 +364,11 @@ public class Schedule_pen extends AppCompatActivity
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s_title = title.getText().toString();
+                s_title[0] = title.getText().toString();
                 String sdate = start_day_time.getText().toString();
                 String edate = end_day_time.getText().toString();
-                String s_text = memo.getText().toString();
-                String s_color = color;
+                s_text[0] = memo.getText().toString();
+                s_color[0] = color;
                 String s_write = writer;
 
                 //디비 저장용
@@ -423,8 +393,9 @@ public class Schedule_pen extends AppCompatActivity
 //                intent.putExtra("schedule_code", schedule_code);
 //                startActivity(intent);
 
-                find_groupcode(s_title, s_text, s_color, user_code[0]); // 스케줄 저장 1번
+
                 new BackgroundTask().execute(); // 2번
+                finish();
             }
         });
     }
@@ -534,15 +505,17 @@ public class Schedule_pen extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String result) {
+
             Intent tent = getIntent();
             int user_code = tent.getIntExtra("user_code", 0);
             int group_code = tent.getIntExtra("group_code",0);
             String user_name = tent.getStringExtra("user_name");
             System.out.println(user_code);
             find_groupcode(user_code); System.out.println("스케줄펜에서의 유저코드" + user_code);
+            make_schedule(s_title[0],group_code,s_text[0], s_color[0]);
             //InitializeDay();//날짜 초기화
             System.out.println("메인에서 유저코드"+ user_code);
-            Intent intent = new Intent(Schedule_pen.this, Schedule_ListMainActivity.class);
+            Intent intent = new Intent(Schedule_pen.this, Menu_MainActivity.class);
             intent.putExtra("scheduleList", result);//파싱한 값을 넘겨줌
             intent.putExtra("group_code", group_code); System.out.println("스케줄팬에서의 그룹코드 인텐트"+group_code);
             intent.putExtra("main_select_Day",y_m_d);

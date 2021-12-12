@@ -3,11 +3,13 @@ package com.cookandroid.a0929;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.cookandroid.a0929.DB.FindMemberRequest;
 import com.cookandroid.a0929.DB.FindgroupcodeRequest;
+import com.cookandroid.a0929.DB.GroupOutRequest;
+import com.cookandroid.a0929.DB.GroupRequest;
+import com.cookandroid.a0929.DB.GroupValidateRequest;
+import com.cookandroid.a0929.DB.LoginRequest;
+import com.cookandroid.a0929.DB.MemberRequest;
+import com.cookandroid.a0929.DB.ParticipateRequest;
 import com.cookandroid.a0929.List.ListViewAdapter;
 import com.cookandroid.a0929.List.Schedule_ListMainActivity;
 import com.cookandroid.a0929.ui.deco.OneDayDecorator;
@@ -50,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.List;
+import java.util.Random;
 
 public class Menu_MainActivity extends AppCompatActivity {
     //schedule_main_fr
@@ -65,9 +74,11 @@ public class Menu_MainActivity extends AppCompatActivity {
     String [] group_name = new String[1];
 
     /**/
-    private int y_m_d[]=new int[3];//
+    private final int[] y_m_d =new int[3];//
     int user_code;
     int init = 0;
+    int saveGroup;
+    int Member_rol;
 
     MaterialCalendarView materialCalendarView;
     List<CalendarDay> selectedDay;
@@ -79,37 +90,6 @@ public class Menu_MainActivity extends AppCompatActivity {
     ArrayList<Integer> member_role_array;
 
     ArrayList<Integer> able_group_code_array;
-
-
-    private void find_groupcode(int user_code){
-
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject jsonObject = new JSONObject( response );
-                    boolean success = jsonObject.getBoolean( "success" );
-                    System.out.println("리스너 gc"+success);
-                    if (success) {
-                        group_code[0] = jsonObject.getInt("group_code");
-                        System.out.println("리스너 gc"+group_code[0]);
-
-                    }
-                    else {
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
-        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
-        queue.add(findMemberRequest);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +107,6 @@ public class Menu_MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_code = intent.getIntExtra("user_code", 0);
         String user_name = intent.getStringExtra("user_name");
-        System.out.println(user_code);
-        find_groupcode(user_code);
 
 
         /*좌측 햄버거 */
@@ -155,6 +133,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         NavigationView navigationView2 = findViewById(R.id.menu_main_nav_rightview);
 
         View right_header = navigationView2.getHeaderView(0);
+
         Button sett =(Button) right_header.findViewById(R.id.menu_rightheader_sett_btn);
         sett.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +143,15 @@ public class Menu_MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+//        Button outb =(Button) right_header.findViewById(R.id.menu_rightheader_out_btn);
+//        outb.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(Menu_MainActivity.this,SettingsActivity.class);
+//                intent.putExtra("group_code",group_code[0]);
+//                startActivity(intent);
+//            }
+//        });
 
 //        navigationView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 //            @Override
@@ -221,6 +209,19 @@ public class Menu_MainActivity extends AppCompatActivity {
         });
         /*캘린더 주말 색상*/
 
+        Handler delay = new Handler();
+
+        delay.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(" ");
+                System.out.println("===============System Message===============");
+                System.out.println("현재 그룹코드 : " + group_code[0]);
+                System.out.println("============================================");
+            }
+        },1000);
+
+
 
     }
     /*버튼 2번눌렀을시 종료 코드 */
@@ -231,7 +232,7 @@ public class Menu_MainActivity extends AppCompatActivity {
         // 2000 milliseconds = 2 seconds
         if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
             backKeyPressedTime = System.currentTimeMillis();
-            toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "'뒤로' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -364,8 +365,13 @@ public class Menu_MainActivity extends AppCompatActivity {
             int user_code = tent.getIntExtra("user_code", 0);
             String user_name = tent.getStringExtra("user_name");
             System.out.println(user_code);
-            find_groupcode(user_code);
             InitializeDay();//날짜 초기화
+
+            for(int i = 0; i < group_name_array.size(); i++){
+                if(mainName.getText().equals(group_name_array.get(i))){
+                    group_code[0]=group_code_array.get(i);
+                }
+            }
 
             Intent intent = new Intent(Menu_MainActivity.this, Schedule_ListMainActivity.class);
             intent.putExtra("scheduleList", result);//파싱한 값을 넘겨줌
@@ -485,26 +491,260 @@ public class Menu_MainActivity extends AppCompatActivity {
                 p_dialog.setView(Pdialog);
                 final AlertDialog aalertDialog = p_dialog.create();
                 aalertDialog.show();
+
+                Button plusBtn = Pdialog.findViewById(R.id.schedule_menu_plusgroup_btn);
+
+                plusBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        EditText et = Pdialog.findViewById(R.id.schedule_menu_plusgroup_et);
+                        String plus_name = et.getText().toString();
+
+                        final int[] randomV = new int[1];
+
+                        Handler delay = new Handler();
+
+                        delay.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int minimumValue = 100000;
+                                int maximumValue = 999999;
+                                Random random = new Random();
+                                randomV[0] = random.nextInt(maximumValue - minimumValue + 1) + minimumValue;
+
+                                Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+
+                                            JSONObject jsonObject = new JSONObject( response );
+                                            boolean success = jsonObject.getBoolean( "success" );
+
+                                            if (success) {
+
+                                            }
+                                            else {
+                                                randomV[0] = random.nextInt(maximumValue - minimumValue + 1) + minimumValue;
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                GroupValidateRequest groupValidateRequest = new GroupValidateRequest(randomV[0], responseListener_groupcode);
+                                RequestQueue queue2 = Volley.newRequestQueue( Menu_MainActivity.this );
+                                queue2.add(groupValidateRequest);
+                            }
+                        },200);
+
+                        delay.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Response.Listener<String> responseListener_grouptable = new Response.Listener<String>() {// ************회원가입********************
+                                    @Override
+                                    public void onResponse(String response) {
+
+                                        try {
+                                            JSONObject jsonObject = new JSONObject( response );
+                                            boolean success = jsonObject.getBoolean( "success" );
+
+                                            if (success) {
+                                                System.out.println(" ");
+                                                System.out.println("===============System Message===============");
+                                                System.out.println("그룹명 : " + plus_name);
+                                                System.out.println("그룹코드 : " + randomV[0]);
+                                                System.out.println("============================================");
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                };
+                                //서버로 Volley를 이용해서 요청
+                                System.out.println("make_group 호출");
+                                GroupRequest groupRequest = new GroupRequest( randomV[0], plus_name, responseListener_grouptable);
+                                RequestQueue queue3 = Volley.newRequestQueue( Menu_MainActivity.this );
+                                queue3.add(groupRequest);
+                            }
+                        },200);
+
+                        delay.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Response.Listener<String> responseListener = new Response.Listener<String>() {// ************멤버테이블 생성********************
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject( response );
+                                            boolean success = jsonObject.getBoolean( "success" );
+                                            if(success){
+                                                System.out.println(" ");
+                                                System.out.println("===============System Message===============");
+                                                System.out.println("그룹 생성 완료 ["+plus_name+"("+randomV[0]+")] = "+user_code+" : "+1);
+                                                System.out.println("============================================");
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                //서버로 Volley를 이용해서 요청
+                                MemberRequest memberRequest = new MemberRequest(user_code, randomV[0], 1, responseListener);
+                                RequestQueue queue_member = Volley.newRequestQueue( Menu_MainActivity.this );
+                                queue_member.add(memberRequest);
+                            }
+                        },400);
+
+                        delay.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                aalertDialog.dismiss();
+                                DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
+                                NavigationView leftDrawerView = findViewById(R.id.menu_main_nav_leftview);
+                                drawer.closeDrawer(Gravity.LEFT);
+                                new DrawerTask().execute();
+                            }
+                        },600);
+
+                    }
+                });
             }
         });
+
         attend_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
-                View Pdialog = getLayoutInflater().inflate(R.layout.schedule_menu_plusgroup_fr,null);
+                View Pdialog = getLayoutInflater().inflate(R.layout.schedule_menu_attendgroup_fr,null);
                 AlertDialog.Builder p_dialog=new AlertDialog.Builder(view.getContext());
                 p_dialog.setView(Pdialog);
                 final AlertDialog aalertDialog = p_dialog.create();
                 aalertDialog.show();
+
+                Button attendBtn = Pdialog.findViewById(R.id.schedule_menu_attendgroup_btn);
+
+                attendBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        EditText et = Pdialog.findViewById(R.id.schedule_menu_attendgroup_et);
+                        int attendCode = Integer.parseInt(et.getText().toString());
+
+                        int stop = -1;
+
+                        for(int i = 0; i < user_code_array.size(); i++) {
+                            System.out.println("배열 : " + group_code_array.get(i) + "   입력 : " + attendCode);
+                            System.out.println("배열 : " + user_code_array.get(i) + "   입력 : " + user_code);
+                            if(stop== -1 && group_code_array.get(i) == attendCode){
+                                stop = i;
+                            }
+
+                            if(user_code_array.get(i).equals(user_code)&&group_code_array.get(i).equals(attendCode)){
+                                stop = -2;
+                            }
+                        }
+
+                        if(stop == -1) {
+                            Toast.makeText(getApplicationContext(), "존재하지 않는 그룹코드 입니다.", Toast.LENGTH_SHORT).show();
+                            System.out.println("존재하지 않는 그룹코드 입니다.");
+                        }
+
+                        else if(stop == -2){
+                            Toast.makeText(getApplicationContext(),"이미 참여되있는 그룹입니다.",Toast.LENGTH_SHORT).show();
+                            System.out.println("이미 참여되있는 그룹입니다.");
+                        }
+
+                        else{
+                            Response.Listener<String> responseListener = new Response.Listener<String>() {// ************멤버테이블 생성********************
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject( response );
+                                        boolean success = jsonObject.getBoolean( "success" );
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            MemberRequest memberRequest = new MemberRequest(user_code, attendCode, 0, responseListener);
+                            RequestQueue queue_member = Volley.newRequestQueue( Menu_MainActivity.this );
+                            queue_member.add(memberRequest);
+
+                            Handler handler=new Handler();
+
+                            handler.postDelayed(new Runnable(){
+                                public void run(){
+                                    aalertDialog.dismiss();
+                                    DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
+                                    NavigationView leftDrawerView = findViewById(R.id.menu_main_nav_leftview);
+                                    drawer.closeDrawer(Gravity.LEFT);
+                                    new DrawerTask().execute();
+                                    saveGroup = attendCode;
+                                }
+                            },1000);
+
+                        }
+                    }
+                });
             }
         });
-
     }
+    public void RightG_Button(View view){
+
+        System.out.println("group_code"+group_code[0]);
+        System.out.println("user_code"+user_code);
+
+        for(int i = 0; i < group_code_array.size(); i++)
+        {
+            if(group_code_array.get(i).equals(group_code[0])&&user_code_array.get(i).equals(user_code))
+            {
+                if(member_role_array.get(i)==0) {
+                    System.out.println("print MemberCode: "+ member_role_array.get(i));
+                    Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                System.out.println("outgroup_schedule" + response);
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                if (success) {
+                                    DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
+                                    NavigationView leftDrawerView = findViewById(R.id.menu_main_nav_leftview);
+                                    drawer.closeDrawer(Gravity.RIGHT);
+                                    Handler handler=new Handler();
+                                    handler.postDelayed(new Runnable(){
+                                        public void run(){
+                                            print_left_drawer();
+                                        }
+                                    },2000);
+
+                                } else {   }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    GroupOutRequest groupOutRequest = new GroupOutRequest(group_code[0], user_code, responseListener_groupcode);
+                    RequestQueue queue = Volley.newRequestQueue(Menu_MainActivity.this);
+                    queue.add(groupOutRequest);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"호스트는 퇴장하실수 없습니다.",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+
     public void print_left_drawer(){
         DrawerLayout drawer = findViewById(R.id.menu_drawer_layout);
         NavigationView leftDrawerView = findViewById(R.id.menu_main_nav_leftview);
         Menu left_menu = leftDrawerView.getMenu();
-
+        System.out.println("left drawer start");
         left_menu.clear();
         able_group_code_array = new ArrayList<>();
 
@@ -522,16 +762,14 @@ public class Menu_MainActivity extends AppCompatActivity {
             left_menu.getItem(j).setCheckable(true);
         }
 
-        if(init==0){
-            mainName = (TextView)findViewById(R.id.schedule_main_fr_name);
-            leftDrawerView.setCheckedItem(0);
-            init=1;
-            group_code[0] = able_group_code_array.get(0);
-            mainName.setText(left_menu.getItem(0).getTitle());
-        }
 
-        System.out.println(able_group_code_array);
+        mainName = (TextView)findViewById(R.id.schedule_main_fr_name);
+        leftDrawerView.setCheckedItem(0);
+        init=1;
+        group_code[0] = able_group_code_array.get(0);
+        mainName.setText(left_menu.getItem(0).getTitle());
 
+       
         drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -545,23 +783,32 @@ public class Menu_MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-                int i;
+                int i,j;
                 mainName = (TextView)findViewById(R.id.schedule_main_fr_name);
 
                 for(i = 0; i < left_menu.size(); i++)
                 {
-                    if(left_menu.getItem(i).isChecked())break;
+                    if(left_menu.getItem(i).isChecked()){
+                        for(j = 0; j < group_code_array.size(); j++){
+                            if(group_name_array.get(j).equals(left_menu.getItem(i).getTitle().toString())){
+                                group_code[0] = group_code_array.get(j);
+                                mainName.setText(left_menu.getItem(i).getTitle());
+                                print_right_drawer();
+                                System.out.println("left drawer end");
+                                break;
+                            }
+                        }
+                    }
                 }
-                group_code[0]= able_group_code_array.get(i);
-                mainName.setText(left_menu.getItem(i).getTitle());
-                print_right_drawer();
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
 
             }
+
         });
+
 
     }
 
@@ -587,10 +834,20 @@ public class Menu_MainActivity extends AppCompatActivity {
             right_menu.getItem(j).setChecked(false);
             if(role.get(j).equals(1))
             {
-
                 right_menu.getItem(j).setIcon(R.drawable.test);//<<<<이미지 수정해야됨
             }
+            if(group_code_array.get(j).equals(group_code[0])&&user_code_array.get(j).equals(user_code))
+            {
+                if(member_role_array.get(j)==0) {
+                    System.out.println("print MemberCode: "+ member_role_array.get(j));
+                }
+                else {
+
+                }
+            }
         }
+
+
     }
 
 

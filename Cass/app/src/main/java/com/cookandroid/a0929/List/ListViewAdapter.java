@@ -2,20 +2,34 @@ package com.cookandroid.a0929.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.cookandroid.a0929.DB.DeleteRequest;
+import com.cookandroid.a0929.DB.DeleteScheduleRequest;
 import com.cookandroid.a0929.DB.FindRequest;
 import com.cookandroid.a0929.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -74,18 +88,56 @@ public class ListViewAdapter extends BaseAdapter {
         TextView txt_memo = (TextView)convertView.findViewById(R.id.txt_memo);
         TextView txt_color = (TextView)convertView.findViewById(R.id.txt_color);
         TextView txt_writer = (TextView)convertView.findViewById(R.id.txt_writer);
+        final TextView txt_code = (TextView)convertView.findViewById(R.id.txt_code);
 
         ListItem listItem = listItems.get(position);
 
         // 가져온 데이터를 텍스트뷰에 입력
         txt_title.setText(listItem.getTitle());
+        System.out.println("스케줄 타이틀"+ listItem.getTitle());
         txt_sdate.setText(listItem.getSdate());
         txt_edate.setText(listItem.getEdate());
         txt_memo.setText(listItem.getMemo());
-        txt_color.setText(listItem.getColor());
+        //txt_color.setText(listItem.getColor());
         txt_writer.setText(listItem.getWriter());
-        //
+
+        //txt_color.setTextColor(Color.parseColor(listItem.getColor()));
+        txt_code.setText(String.valueOf(listItem.getSchedule_code()));
+        System.out.println("스케줄 코드" + String.valueOf(listItem.getSchedule_code()));
         txt_color.setBackgroundColor(Color.parseColor(listItem.getColor()));
+        String count  = String.valueOf(listItem.getSchedule_code());
+
+        Button deleteBtn = (Button)convertView.findViewById(R.id.txt_deleteBtn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            System.out.println("delate_schedule" + response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+
+                            if (success) {
+                                saveList.remove(position);
+                                deleteItem(position);
+                                notifyDataSetChanged();
+                                System.out.println();
+                            } else {
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                DeleteRequest deleteRequest = new DeleteRequest(Integer.parseInt(txt_code.getText().toString()), responseListener_groupcode);
+                RequestQueue queue = Volley.newRequestQueue(parentActivity);
+                queue.add(deleteRequest);
+            }
+        });
 
 
         return convertView;
@@ -101,4 +153,12 @@ public class ListViewAdapter extends BaseAdapter {
 //        listItem.setWriter(writer);
 //        listItems.add(listItem);
 //    }
+
+
+
 }
+
+
+
+
+
