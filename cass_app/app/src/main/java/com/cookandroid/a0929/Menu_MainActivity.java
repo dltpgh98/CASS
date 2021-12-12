@@ -89,37 +89,6 @@ public class Menu_MainActivity extends AppCompatActivity {
 
     ArrayList<Integer> able_group_code_array;
 
-
-    private void find_groupcode(int user_code){
-
-        Response.Listener<String> responseListener_groupcode = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject jsonObject = new JSONObject( response );
-                    boolean success = jsonObject.getBoolean( "success" );
-                    System.out.println("리스너 gc"+success);
-                    if (success) {
-                        group_code[0] = jsonObject.getInt("group_code");
-                        System.out.println("리스너 gc"+group_code[0]);
-
-                    }
-                    else {
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        FindMemberRequest findMemberRequest = new FindMemberRequest(user_code, responseListener_groupcode);
-        RequestQueue queue = Volley.newRequestQueue( Menu_MainActivity.this );
-        queue.add(findMemberRequest);
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,8 +105,6 @@ public class Menu_MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_code = intent.getIntExtra("user_code", 0);
         String user_name = intent.getStringExtra("user_name");
-        System.out.println(user_code);
-        find_groupcode(user_code);
 
 
         /*좌측 햄버거 */
@@ -229,6 +196,18 @@ public class Menu_MainActivity extends AppCompatActivity {
             }
         });
         /*캘린더 주말 색상*/
+
+        Handler delay = new Handler();
+
+        delay.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("===============System Message===============");
+                System.out.println("현재 그룹코드 : " + group_code[0]);
+                System.out.println("============================================");
+            }
+        },1000);
+
 
 
     }
@@ -373,7 +352,6 @@ public class Menu_MainActivity extends AppCompatActivity {
             int user_code = tent.getIntExtra("user_code", 0);
             String user_name = tent.getStringExtra("user_name");
             System.out.println(user_code);
-            find_groupcode(user_code);
             InitializeDay();//날짜 초기화
 
             for(int i = 0; i < group_name_array.size(); i++){
