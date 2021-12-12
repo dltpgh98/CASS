@@ -19,7 +19,7 @@ public class FindgroupcodeRequest extends StringRequest {
 
         System.out.println("FindgroupcodeRequest 호출");
         map = new HashMap<>();
-        map.put("group_code", group_code +"");
+        map.put("group_code", group_code + "");
 
     }
 

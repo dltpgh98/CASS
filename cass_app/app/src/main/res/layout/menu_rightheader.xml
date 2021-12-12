@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/right_nav_header_height"
     android:background="@color/white"
-    android:gravity="left"
     android:orientation="vertical"
+    android:gravity="center"
     android:paddingLeft="@dimen/right_activity_horizontal_margin"
     android:paddingTop="@dimen/right_activity_vertical_margin"
     android:paddingRight="@dimen/right_activity_horizontal_margin"
     android:paddingBottom="@dimen/right_activity_vertical_margin"
+    android:layout_marginTop="10dp"
     app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginTop="50dp"
+
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:text="MEMBER"
     >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="right"
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/menu_rightheader_sett_btn"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:drawableBottom="@drawable/set_icon_setting"
+            android:background="#00ff0000"
+            />
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="string/nav_header_desc"
         android:text="MEMBER"
+        android:gravity="center"
         android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
         />
+
 </LinearLayout>

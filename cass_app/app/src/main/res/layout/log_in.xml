@@ -44,6 +44,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/log_in_id_et"
             android:layout_width="match_parent"
+            android:inputType="text"
             android:fontFamily="@font/fontstyle"
             android:textStyle="bold"
             android:layout_height="45dp"
@@ -68,6 +69,7 @@
             android:id="@+id/log_in_pw_et"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:inputType="text"
             android:fontFamily="@font/fontstyle"
             android:textStyle="bold"
             android:password="true"

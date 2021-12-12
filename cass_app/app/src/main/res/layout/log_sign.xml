@@ -198,7 +198,6 @@
             android:layout_height="45dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            android:password="true"
             android:maxLength="20"
             android:fontFamily="@font/fontstyle"
             android:textStyle="bold"/>
