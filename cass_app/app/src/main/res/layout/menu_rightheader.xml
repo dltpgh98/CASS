@@ -17,6 +17,18 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:text="MEMBER"
     >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:gravity="left">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/menu_rightheader_out_btn"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:clickable="true"
+        android:onClick="RightG_Button"
+        android:drawableBottom="@drawable/ic_door"
+        android:background="#00ff0000"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -31,7 +43,7 @@
             android:drawableBottom="@drawable/set_icon_setting"
             android:background="#00ff0000"
             />
-
+    </LinearLayout>
     </LinearLayout>
 
     <TextView

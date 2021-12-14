@@ -145,7 +145,7 @@
                     android:background="@null"
                     android:fontFamily="@font/fontstyle"
                     android:maxLength="16"
-                    android:text="123456"
+                    android:text=""
                     android:textSize="15sp" />
 
             </TableRow>

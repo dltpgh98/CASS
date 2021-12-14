@@ -64,14 +64,27 @@
         <entry key="..\:/1026_sh/1026_sh/app/src/main/res/mipmap-anydpi-v26/ic_cass_launcher.xml" value="0.378125" />
         <entry key="..\:/1026_sh/1026_sh/app/src/main/res/xml/root_preferences.xml" value="0.2907608695652174" />
         <entry key="..\:/1026_sh/1026_sh/app/src/main/res/xml/set_list.xml" value="0.2630208333333333" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_app/app/src/main/res/layout/log_id.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_app/app/src/main/res/layout/menu_leftcontent.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_app/app/src/main/res/layout/schedule_menu_attendgroup_fr.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_app/app/src/main/res/layout/schedule_menu_plusgroup_fr.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_tpgh/app/src/main/res/layout/log_sign.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_tpgh/app/src/main/res/layout/schedule_menu_attendgroup_fr.xml" value="0.20364583333333333" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_tpgh/app/src/main/res/layout/schedule_menu_group_fr.xml" value="0.2046875" />
-        <entry key="..\:/FusionProject/fusion_project_cass/cass_tpgh/app/src/main/res/layout/schedule_menu_plusgroup_fr.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/list_item.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/log_pw.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/log_sign.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/menu_leftcontent.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/menu_leftheader.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/menu_main.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/schedule_pen.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/schedule_second_fr.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/schedule_third_fr.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/layout/set_main.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/menu/main.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/menu/menu_leftdrawer.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/menu/menu_rightdrawer.xml" value="0.2046875" />
+        <entry key="..\:/FusionProject/fusion_project_cass/Cass/app/src/main/res/xml/set_list.xml" value="0.2046875" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/list_item.xml" value="0.2046875" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/menu_group_out.xml" value="0.36614583333333334" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/menu_leftheader.xml" value="0.1390625" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/menu_right_group_out.xml" value="0.1390625" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/menu_rightheader.xml" value="0.36614583333333334" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/schedule_menu_attendgroup_fr.xml" value="0.2046875" />
+        <entry key="..\:/TEST/CASS-lee_TL/Cass/app/src/main/res/layout/schedule_menu_plusgroup_fr.xml" value="0.36614583333333334" />
         <entry key="..\:/TEST/Cass_1201/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.38229166666666664" />
         <entry key="..\:/TEST/Cass_1201/app/src/main/res/drawable-anydpi/icon_plus.xml" value="0.38229166666666664" />
         <entry key="..\:/TEST/Cass_1201/app/src/main/res/drawable/set_icon_plus.xml" value="0.22395833333333334" />

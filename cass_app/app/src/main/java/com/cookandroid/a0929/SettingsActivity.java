@@ -50,24 +50,19 @@ public class SettingsActivity extends AppCompatActivity {
 
 
             EditTextPreference signaturePreference_code = findPreference("setting_code");
-            EditTextPreference signaturePreference_pw = findPreference("setting_pw");
-            EditTextPreference signaturePreference_nickname = findPreference("setting_nickname");
-            ListPreference signaturePreference_intercept = findPreference("setting_Intercept");
-            ListPreference signaturePreference_ban = findPreference("setting_banuser");
-            EditTextPreference signaturePreference_dona = findPreference("setting_donation");
 
             signaturePreference_code.setTitle("code: " +group_code);
 
             //방장권한
             int i =0; // 방장코드 확인
-            if (i==0) { //방장코드 확인
+            /*if (i==0) { //방장코드 확인
                 System.out.println(signaturePreference_pw);
                 if (signaturePreference_ban != null) {
                     signaturePreference_ban.setVisible(true);
                 }if (signaturePreference_intercept != null) {
                     signaturePreference_intercept.setVisible(true);
                 }
-            }
+            }*/
         }
     }
 }
