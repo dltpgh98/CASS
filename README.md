@@ -4,7 +4,7 @@
 다수의 유저가 그룹을 형성하고 일정을 공유하며 상호작용할 수 있는 안드로이드 애플리케이션입니다. 클라이언트 렌더링뿐만 아니라, 클라우드 인프라(AWS) 환경에서 RDBMS를 설계하고 서버 API를 직접 구축하며 전체 시스템의 데이터 흐름을 완성한 프로젝트입니다.
 
 ## 📱 앱 화면 (Screenshots)
-<!-- 💡 아래 줄을 지우고 PPT에 있는 '앱 실행 화면 이미지'들을 드래그 앤 드롭 하세요! -->
+
 <img width="1010" height="568" alt="image" src="https://github.com/user-attachments/assets/a9413c87-9270-418e-aae4-cef3be25c35c" />
 <img width="1009" height="566" alt="image" src="https://github.com/user-attachments/assets/d947dd8b-54a8-480a-bd18-3fb0c8992193" />
 <img width="1010" height="566" alt="image" src="https://github.com/user-attachments/assets/5cbb0457-0de6-41a4-b2fc-1e6a9824a492" />
@@ -37,13 +37,13 @@
 
 ##  주요 기능 (Key Features)
 - **회원가입 및 로그인:** 유저 인증 및 세션 관리
-- **그룹 기능:** 다수의 유저가 참여할 수 있는 스케줄 그룹 생성 및 관리
 - **친구 초대:** 시스템 내 유저 검색 및 그룹 스케줄 초대
 - **스케줄 관리 (CRUD):** 일정 생성, 조회, 수정, 삭제 및 참여자 간 동기화
+- **그룹 기능:** 다수의 유저가 참여할 수 있는 스케줄 그룹 생성 및 관리
 
 <br>
 
-##  나의 핵심 역할 (What I Did)
+##  나의 역할
 **팀장 (앱 기획, 클라이언트/서버 전반 구조 설계 및 핵심 기능 개발)**
 
 1. **사용자 스토리보드 및 기획 총괄:** 앱의 전체적인 화면 흐름(스토리보드)을 기획하여 사용자 친화적인 동선을 설계했습니다.
